@@ -115,25 +115,25 @@ class Login : AppCompatActivity(), View.OnClickListener{
             }
             R.id.BTN_login_Login ->{
                 var loginHashMapData:HashMap<String,String> = HashMap<String,String>()
-                loginHashMapData.put("id",ET_login_Id.toString())
-                loginHashMapData.put("nickname",ET_login_Password.toString())
+                loginHashMapData.put("id", ET_login_Id?.text.toString())
+                loginHashMapData.put("nickname", ET_login_Password?.text.toString())
 
                 var loginInterface:LoginInterface = RetrofitClient.RetrofitClient.getInstance().create(LoginInterface::class.java)
                 var callLogin: Call<Login_Data>? = loginInterface.post_Login(loginHashMapData)
                 if (callLogin != null) {
-                    callLogin.enqueue(object : Callback<Login_Data>{
+                    callLogin.enqueue(object : Callback<Login_Data> {
                         override fun onResponse(call: Call<Login_Data>, response: Response<Login_Data>) {
                             Log.d(javaClass.simpleName,"상태코드"+response.code())
                             if (response.isSuccessful){
                                 //콜백
-                                var logindataset:Login_Data = response.body()!!
+                                var loginResponse:Login_Data = response.body()!!
 
-                                var idLog:String = logindataset.id.toString()
+                                var idLog:String = loginResponse.id
                                 //pw로 바꿔야함
-                                var pwLog:String = logindataset.nickname.toString()
+                                var pwLog:String = loginResponse.nickname
 
-                                LoginLog.getInstance()!!.loginIdLog = idLog
-                                LoginLog.getInstance()!!.loginPwLog = pwLog
+                                LoginLog.getInstance()!!.setloginIdLog(idLog)
+                                LoginLog.getInstance()!!.setloginPwLog(pwLog)
                                 val mainActivity:Intent = Intent(this@Login,BottomNaviView::class.java)
                                 mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                 mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

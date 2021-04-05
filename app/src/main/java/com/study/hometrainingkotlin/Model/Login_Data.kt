@@ -1,6 +1,6 @@
 package com.study.hometrainingkotlin.Model
 
-data class Login_Data(var id:Int, var nickname:String) {
+data class Login_Data(var id:String, var nickname:String) {
 //    var id:Int
 //        get() {
 //            return id
