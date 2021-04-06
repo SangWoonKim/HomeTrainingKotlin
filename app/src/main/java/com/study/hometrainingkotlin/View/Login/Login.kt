@@ -49,7 +49,7 @@ class Login : AppCompatActivity(), View.OnClickListener{
             "light" -> DarkThemeUtil.applyTheme(DarkThemeUtil.LIGHT_MODE)
             "default" -> DarkThemeUtil.applyTheme(DarkThemeUtil.DEFAULT_MODE)
         }
-        setContentView(R.layout.login_layout)
+        setContentView(R.layout.login_activity)
         TV_login_restricted = findViewById<View>(R.id.TV_login_restricted) as TextView
         TV_login_restricted!!.setOnClickListener(this)
 
