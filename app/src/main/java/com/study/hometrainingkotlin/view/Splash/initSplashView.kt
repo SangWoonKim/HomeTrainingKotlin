@@ -1,9 +1,9 @@
-package com.study.hometrainingkotlin.View.Splash
+package com.study.hometrainingkotlin.view.Splash
 
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import com.study.hometrainingkotlin.View.Login.Login
+import com.study.hometrainingkotlin.view.Login.Login
 
 class initSplashView: Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {

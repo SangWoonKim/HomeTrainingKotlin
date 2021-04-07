@@ -1,12 +1,12 @@
-package com.study.hometrainingkotlin.View.exercise
+package com.study.hometrainingkotlin.view.Register
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.study.hometrainingkotlin.R
 
-class Loins : AppCompatActivity() {
+class Register : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.loins_activity)
+        setContentView(R.layout.register_activity)
     }
 }

@@ -14,12 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HomeTrainingKotlin"
         android:usesCleartextTraffic="true">
-        <activity android:name=".View.exercise.Body"></activity>
-        <activity android:name=".View.exercise.Loins" />
-        <activity android:name=".View.exercise.Lower" />
-        <activity android:name=".View.exercise.Upper" />
+        <activity android:name=".view.exercise.Body"></activity>
         <activity
-            android:name=".View.Splash.initSplashView"
+            android:name=".view.Splash.initSplashView"
             android:screenOrientation="fullSensor"
             android:theme="@style/ExerciseSplash">
             <intent-filter>
@@ -28,8 +25,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".View.Login.Login" />
-        <activity android:name=".View.Register.Register" />
+        <activity android:name=".view.Login.Login" />
+        <activity android:name=".view.Register.Register" />
         <activity android:name=".BottomNaviView" />
     </application>
 

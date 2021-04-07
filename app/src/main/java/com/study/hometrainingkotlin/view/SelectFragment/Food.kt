@@ -1,4 +1,4 @@
-package com.study.hometrainingkotlin.View.SelectFragment
+package com.study.hometrainingkotlin.view.SelectFragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,12 +7,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.study.hometrainingkotlin.R
 
-class Settings : Fragment() {
+class Food:Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_settings,container,false)
+        return inflater.inflate(R.layout.fragment_food,container,false)
     }
 }

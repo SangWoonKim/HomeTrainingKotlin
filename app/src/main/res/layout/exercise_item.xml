@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="exerciseItem"
-            type="com.study.hometrainingkotlin.Model.vo.ExerciseData" />
+            name="exerciseitem"
+            type="com.study.hometrainingkotlin.model.vo.ExerciseData" />
     </data>
 
     <LinearLayout
@@ -14,12 +14,16 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <ImageView
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{exerciseitem.e_image}"/>
+        <!--<ImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:scaleType="fitXY"
-            android:src="@{exerciseItem.e_image}"/>
+            android:src="@{exerciseitem.e_image}"/>-->
     </LinearLayout>
 </layout>

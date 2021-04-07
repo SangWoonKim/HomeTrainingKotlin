@@ -1,5 +1,6 @@
-package com.study.hometrainingkotlin.View.SelectFragment
+package com.study.hometrainingkotlin.view.SelectFragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import com.study.hometrainingkotlin.R
+import com.study.hometrainingkotlin.view.exercise.Body
 
 class Exercise: Fragment(),View.OnClickListener {
 
@@ -33,6 +35,9 @@ class Exercise: Fragment(),View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        TODO("Not yet implemented")
+        when(v!!.id){
+            R.id.IMG_BTN_Upper -> { val upper = Intent(activity,Body::class.java)
+                startActivity(upper)}
+        }
     }
 }

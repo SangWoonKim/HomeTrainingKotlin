@@ -1,4 +1,4 @@
-package com.study.hometrainingkotlin.View.Setting
+package com.study.hometrainingkotlin.view.Setting
 
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate

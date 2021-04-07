@@ -1,4 +1,4 @@
-package com.study.hometrainingkotlin.Model.utils
+package com.study.hometrainingkotlin.model.utils
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder

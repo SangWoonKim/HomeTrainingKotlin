@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".View.Login.Login">
+    tools:context=".view.Login.Login">
 
     <Button
         android:id="@+id/BTN_login_Register"

@@ -1,4 +1,4 @@
-package com.study.hometrainingkotlin.View.Login
+package com.study.hometrainingkotlin.view.Login
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -8,14 +8,13 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import com.study.hometrainingkotlin.BottomNaviView
-import com.study.hometrainingkotlin.Model.Login_Data
-import com.study.hometrainingkotlin.Model.utils.LoginInterface
-import com.study.hometrainingkotlin.Model.utils.RetrofitClient
+import com.study.hometrainingkotlin.model.Login_Data
+import com.study.hometrainingkotlin.model.utils.LoginInterface
+import com.study.hometrainingkotlin.model.utils.RetrofitClient
 import com.study.hometrainingkotlin.R
-import com.study.hometrainingkotlin.View.Register.Register
-import com.study.hometrainingkotlin.View.Setting.DarkThemeUtil
+import com.study.hometrainingkotlin.view.Register.Register
+import com.study.hometrainingkotlin.view.Setting.DarkThemeUtil
 import com.study.hometrainingkotlin.static.LoginLog
 import retrofit2.Call
 import retrofit2.Callback

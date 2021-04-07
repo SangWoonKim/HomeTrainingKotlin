@@ -8,8 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.study.hometrainingkotlin.View.SelectFragment.*
-import com.study.hometrainingkotlin.View.SelectFragment.List
+import com.study.hometrainingkotlin.view.SelectFragment.*
+import com.study.hometrainingkotlin.view.SelectFragment.List
 
 class BottomNaviView : AppCompatActivity() {
     //바텀네비게이션뷰 객체 정의

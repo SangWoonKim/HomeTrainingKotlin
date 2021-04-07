@@ -1,19 +1,21 @@
-package com.study.hometrainingkotlin.Model.repository
+package com.study.hometrainingkotlin.model.repository
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.study.hometrainingkotlin.Model.utils.ExerciseInterface
-import com.study.hometrainingkotlin.Model.utils.RetrofitClient
-import com.study.hometrainingkotlin.Model.vo.ExerciseData
+import com.study.hometrainingkotlin.model.utils.ExerciseInterface
+import com.study.hometrainingkotlin.model.utils.RetrofitClient
+import com.study.hometrainingkotlin.model.vo.ExerciseData
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
+//서버에서 데이터를 받아 저장하는 클래스 Repository
 
 class ExerciseRepository {
     private val TAG: String = javaClass.simpleName
 
     companion object {
-        lateinit var exerciseUpperArray: ArrayList<ExerciseData>
+        var exerciseUpperArray: ArrayList<ExerciseData> ?= null
         var exerciseUpperLiveArray: MutableLiveData<ArrayList<ExerciseData>> = MutableLiveData()
         lateinit var exerciseLowerArray: ArrayList<ExerciseData>
         lateinit var exerciseLoinsArray: ArrayList<ExerciseData>
@@ -121,6 +123,7 @@ class ExerciseRepository {
         }
     }
 
+    //허리운동 조회
     fun getExerciseLoins(): ArrayList<ExerciseData> {
         if (exerciseLoinsArray == null) {
             var exerciseLoins: Call<ArrayList<ExerciseData>>? =

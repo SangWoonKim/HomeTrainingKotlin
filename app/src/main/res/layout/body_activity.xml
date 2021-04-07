@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-
-    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".View.exercise.Body">
+        tools:context=".view.exercise.Body">
 
         <ScrollView
             android:id="@+id/bodyscrollview"
@@ -34,13 +30,13 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <ListView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/bodylist"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:clickable="true" />
+                    android:clickable="true"
+                    />
             </LinearLayout>
         </ScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>

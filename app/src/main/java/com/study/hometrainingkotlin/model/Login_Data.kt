@@ -1,4 +1,4 @@
-package com.study.hometrainingkotlin.Model
+package com.study.hometrainingkotlin.model
 
 data class Login_Data(var id:String, var nickname:String) {
 //    var id:Int
