@@ -1,4 +1,4 @@
-package com.study.hometrainingkotlin.model.vo
+package com.study.hometrainingkotlin.model.externalrepository.vo
 
 //운동에 대한 정보 저장 클래스
 data class ExerciseData(

@@ -10,12 +10,14 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.study.hometrainingkotlin.BottomNaviView
 import com.study.hometrainingkotlin.model.Login_Data
-import com.study.hometrainingkotlin.model.utils.LoginInterface
-import com.study.hometrainingkotlin.model.utils.RetrofitClient
+import com.study.hometrainingkotlin.model.externalrepository.utils.LoginInterface
+import com.study.hometrainingkotlin.model.externalrepository.utils.RetrofitClient
 import com.study.hometrainingkotlin.R
+import com.study.hometrainingkotlin.model.localrepository.room.DataBaseCopy
 import com.study.hometrainingkotlin.view.Register.Register
 import com.study.hometrainingkotlin.view.Setting.DarkThemeUtil
 import com.study.hometrainingkotlin.static.LoginLog
+import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -79,6 +81,16 @@ class Login : AppCompatActivity(), View.OnClickListener{
         ET_login_Id!!.setText(id)
         ET_login_Password!!.setText(pw)
         checkBoxSharedPreference.setChecked(check)
+
+
+        //SQLite(assets에있는 db파일)파일 복사 시작 부분
+        //쓰레드(코루틴 사용)
+        var copyStart:Job = CoroutineScope(Dispatchers.IO).launch {
+            DataBaseCopy.copyDatabase(context = applicationContext)
+        }
+        runBlocking {
+            copyStart.join()
+        }
     }
 
 

@@ -1,10 +1,10 @@
-package com.study.hometrainingkotlin.model.repository
+package com.study.hometrainingkotlin.model.externalrepository.repository
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.study.hometrainingkotlin.model.utils.ExerciseInterface
-import com.study.hometrainingkotlin.model.utils.RetrofitClient
-import com.study.hometrainingkotlin.model.vo.ExerciseData
+import com.study.hometrainingkotlin.model.externalrepository.utils.ExerciseInterface
+import com.study.hometrainingkotlin.model.externalrepository.utils.RetrofitClient
+import com.study.hometrainingkotlin.model.externalrepository.vo.ExerciseData
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

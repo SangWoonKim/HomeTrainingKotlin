@@ -2,18 +2,14 @@ package com.study.hometrainingkotlin.view.exercise
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.study.hometrainingkotlin.R
-import com.study.hometrainingkotlin.model.vo.ExerciseData
+import com.study.hometrainingkotlin.model.externalrepository.vo.ExerciseData
 import com.study.hometrainingkotlin.view.exercise.adapter.ExerciseAdapter
 import com.study.hometrainingkotlin.viewmodel.ExerciseViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class Body : AppCompatActivity() {
 

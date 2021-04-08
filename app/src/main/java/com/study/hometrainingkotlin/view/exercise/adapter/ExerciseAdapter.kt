@@ -1,6 +1,5 @@
 package com.study.hometrainingkotlin.view.exercise.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -8,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.study.hometrainingkotlin.BR
 import com.study.hometrainingkotlin.R
 import com.study.hometrainingkotlin.databinding.ExerciseItemBinding
-import com.study.hometrainingkotlin.model.vo.ExerciseData
+import com.study.hometrainingkotlin.model.externalrepository.vo.ExerciseData
 
 
 class ExerciseAdapter(exerciseArray: ArrayList<ExerciseData>, listener: OnItemClickListener): RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder>() {

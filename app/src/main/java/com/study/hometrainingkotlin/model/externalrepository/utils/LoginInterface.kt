@@ -1,4 +1,4 @@
-package com.study.hometrainingkotlin.model.utils
+package com.study.hometrainingkotlin.model.externalrepository.utils
 
 import com.study.hometrainingkotlin.model.Login_Data
 import retrofit2.Call

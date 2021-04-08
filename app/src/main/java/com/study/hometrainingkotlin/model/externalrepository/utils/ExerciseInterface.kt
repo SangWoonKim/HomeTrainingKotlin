@@ -1,6 +1,6 @@
-package com.study.hometrainingkotlin.model.utils
+package com.study.hometrainingkotlin.model.externalrepository.utils
 
-import com.study.hometrainingkotlin.model.vo.ExerciseData
+import com.study.hometrainingkotlin.model.externalrepository.vo.ExerciseData
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
