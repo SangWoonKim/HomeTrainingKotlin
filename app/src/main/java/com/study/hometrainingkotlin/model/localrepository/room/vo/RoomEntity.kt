@@ -16,5 +16,6 @@ data class ExerciseListEntity(val part: String,         //부위
                               val imageOrg:String,      //dialog이미지
                               val activeImage:String,   //스프라이트 이미지 1
                               val activeImage2:String,   //스프라이트 이미지 2
-                              @PrimaryKey val id:Int
+                              //자동증가 기능 autoGenerate = true
+                              @PrimaryKey(autoGenerate = true) val id:Int? = null
                               )
