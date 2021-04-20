@@ -2,6 +2,7 @@ package com.study.hometrainingkotlin.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.study.hometrainingkotlin.model.externalrepository.repository.ExerciseRepository
@@ -39,6 +40,11 @@ class ExerciseViewModel(application: Application): AndroidViewModel(application)
 //    fun getLoins() {
 //        return upperLiveData.postValue(exerciseRepository.getExerciseLoins())
 //    }
+
+    //운동목록 조회 메소드
+    fun selectListItem(): LiveData<List<ExerciseListEntity>> {
+        return exerciseListRepository.selectList()
+    }
 
     // 운동목록 item 삽입메소드
     fun insertListItem(exerciseListEntity:ExerciseListEntity){

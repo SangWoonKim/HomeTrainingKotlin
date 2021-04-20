@@ -1,6 +1,7 @@
 package com.study.hometrainingkotlin.model.localrepository.room.repository
 
 import android.app.Application
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.study.hometrainingkotlin.model.externalrepository.vo.ExerciseData
 import com.study.hometrainingkotlin.model.localrepository.room.AppDatabase
@@ -18,7 +19,7 @@ class ExerciseListRepository(application: Application) {
 
 
     //운동목록 table 조회
-    fun selectList():MutableLiveData<ArrayList<ExerciseListEntity>>{
+    fun selectList(): LiveData<List<ExerciseListEntity>> {
         return exerciseDAO.exerciseListSelect()
     }
 

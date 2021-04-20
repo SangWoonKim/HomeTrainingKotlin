@@ -1,5 +1,6 @@
 package com.study.hometrainingkotlin.model.localrepository.room.dao
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.room.Dao
 import androidx.room.Insert
@@ -20,5 +21,5 @@ interface ExerciseDAO {
 
 //    //운동목록 조회시 사용
     @Query("SELECT * FROM exerciseresult ")
-    fun exerciseListSelect(): MutableLiveData<ArrayList<ExerciseListEntity>>
+    fun exerciseListSelect(): LiveData<List<ExerciseListEntity>>
 }

@@ -4,6 +4,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.ImageView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -13,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.study.hometrainingkotlin.R
 import com.study.hometrainingkotlin.model.externalrepository.vo.ExerciseData
 import com.study.hometrainingkotlin.model.localrepository.room.dao.ExerciseListEntity
-import com.study.hometrainingkotlin.view.exercise.adapter.ExerciseAdapter
+import com.study.hometrainingkotlin.view.adapter.ExerciseAdapter
 import com.study.hometrainingkotlin.viewmodel.ExerciseViewModel
 
 class Body : AppCompatActivity() {
@@ -43,8 +44,8 @@ class Body : AppCompatActivity() {
     private fun setAdapterAndEvent(){
         if (exerciseAdapter == null){
             exerciseAdapter = ExerciseAdapter(upperList!!, object :
-                    ExerciseAdapter.OnItemClickListener {
-                override fun onItemClick(position: Int) {
+                ExerciseAdapter.OnItemClickListener {
+                override fun onItemClick(v: View, position: Int) {
                     Log.d("listPostition", "" + position)
                     //다이얼로그 객체 생성
                     val dialog = AlertDialog.Builder(this@Body)
@@ -65,33 +66,39 @@ class Body : AppCompatActivity() {
                     val packageName: String = application.packageName
 
                     //(dbPath,type,packageName)을 이용하여 리소스ID값 얻기
-                    val imagePath: Int = application.resources.getIdentifier(dbPath, type, packageName)
+                    val imagePath: Int = application.resources.getIdentifier(
+                        dbPath,
+                        type,
+                        packageName
+                    )
                     //해당 리소스ID의 이미지를 이용하여 imageView에 set
                     dialog_image.setImageResource(imagePath)
 
                     //dialog객체에 뷰를 정의
                     dialog.setView(view)
-                            .setNeutralButton("취소", object : DialogInterface.OnClickListener{
-                                override fun onClick(dialog: DialogInterface?, which: Int) {
-                                    //아무것도 명시를 하지않으면 밖으로 빠져나옴
-                                }
+                        .setNeutralButton("취소", object : DialogInterface.OnClickListener {
+                            override fun onClick(dialog: DialogInterface?, which: Int) {
+                                //아무것도 명시를 하지않으면 밖으로 빠져나옴
+                            }
 
-                            })
-                            .setPositiveButton("추가",object : DialogInterface.OnClickListener{
-                                override fun onClick(dialog: DialogInterface?, which: Int) {
-                                    //클릭한 아이템의 속성을 ExerciseListEntity에 넣어 인스턴스화하여 매개변수로 사용
-                                    exerciseViewModel.insertListItem(ExerciseListEntity(
-                                            clickItem.E_part,
-                                            clickItem.E_name,
-                                            Integer.parseInt(clickItem.E_setcal),
-                                            clickItem.E_image,
-                                            clickItem.E_imageorg,
-                                            clickItem.E_activeimg,
-                                            clickItem.E_activeimg2
-                                    ))
-                                }
+                        })
+                        .setPositiveButton("추가", object : DialogInterface.OnClickListener {
+                            override fun onClick(dialog: DialogInterface?, which: Int) {
+                                //클릭한 아이템의 속성을 ExerciseListEntity에 넣어 인스턴스화하여 매개변수로 사용
+                                exerciseViewModel.insertListItem(
+                                    ExerciseListEntity(
+                                        clickItem.E_part,
+                                        clickItem.E_name,
+                                        Integer.parseInt(clickItem.E_setcal),
+                                        clickItem.E_image,
+                                        clickItem.E_imageorg,
+                                        clickItem.E_activeimg,
+                                        clickItem.E_activeimg2
+                                    )
+                                )
+                            }
 
-                            })
+                        }).create().show()
                 }
             })
             recyclerView!!.layoutManager = LinearLayoutManager(this)

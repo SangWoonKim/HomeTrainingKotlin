@@ -33,7 +33,12 @@ abstract class AppDatabase : RoomDatabase() {
              return INSTANCE ?: synchronized(AppDatabase::class){
                  //room을 이용하여 이 클래스에 명시된 정보를 갖고 객체를 생성
                 INSTANCE?: Room.databaseBuilder(context.applicationContext,
-                AppDatabase::class.java,"HomeTrainingKotlin.db").build().also { INSTANCE = it }
+                    AppDatabase::class.java,
+                    "HomeTrainingKotlin.db")
+                    .fallbackToDestructiveMigration()
+                    .allowMainThreadQueries()
+                    .build()
+                    .also { INSTANCE = it }
              }
         }
 

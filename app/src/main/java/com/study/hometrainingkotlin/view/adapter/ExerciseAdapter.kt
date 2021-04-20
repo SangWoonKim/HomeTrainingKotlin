@@ -1,6 +1,7 @@
-package com.study.hometrainingkotlin.view.exercise.adapter
+package com.study.hometrainingkotlin.view.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -17,7 +18,7 @@ class ExerciseAdapter(exerciseArray: ArrayList<ExerciseData>, listener: OnItemCl
     var itemClickListener: OnItemClickListener? = null
 
     init {
-        itemClickListener = listener
+        this.itemClickListener = listener
     }
 
     //데이터 갱신시 호출되는 메소드 즉 배열의 값이 외부에서 달라졌을시 어뎁터에 적용하기 위한 메소드
@@ -62,7 +63,7 @@ class ExerciseAdapter(exerciseArray: ArrayList<ExerciseData>, listener: OnItemCl
                 var currentPosition =  adapterPosition
                 if (currentPosition != RecyclerView.NO_POSITION){
                     if (itemClickListener != null){
-                        itemClickListener!!.onItemClick(currentPosition)
+                        itemClickListener!!.onItemClick(it,currentPosition)
                     }
                 }
             }
@@ -73,6 +74,6 @@ class ExerciseAdapter(exerciseArray: ArrayList<ExerciseData>, listener: OnItemCl
 
     //아이템 클릭 인터페이스 등록
     interface OnItemClickListener{
-        fun onItemClick(position: Int)
+        fun onItemClick(v: View, position: Int)
     }
 }
