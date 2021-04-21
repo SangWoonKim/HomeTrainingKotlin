@@ -18,11 +18,12 @@ class ExerciseListRepository(application: Application) {
             dbInstance!!.exerciseDAO()
 
 
-    //운동목록 table 조회
+    //운동목록 table 조회(Read, select)
     fun selectList(): LiveData<List<ExerciseListEntity>> {
         return exerciseDAO.exerciseListSelect()
     }
 
+    //운동목록이 참조하는 table에 데이터 삽입(Create,insert)
     fun listInsert(exerciseListEntity : ExerciseListEntity){
         //람다식 사용하기 아직 안함
 //        AppDatabase.writeExecutor.execute(() -> {
@@ -33,4 +34,13 @@ class ExerciseListRepository(application: Application) {
             exerciseDAO.insertExerciseList(exerciseListEntity)
         })
     }
+
+    //운동목록이 참조하는 table의 데이터 삭제(Delete,delete)
+    fun deleteListItem(exerciseListEntity: ExerciseListEntity){
+        AppDatabase.writeExecutor.execute(Runnable {
+            exerciseDAO.exerciseListDelete(exerciseListEntity)
+        })
+    }
+
+
 }

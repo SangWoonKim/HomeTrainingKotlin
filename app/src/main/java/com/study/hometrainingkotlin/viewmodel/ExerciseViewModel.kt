@@ -51,6 +51,11 @@ class ExerciseViewModel(application: Application): AndroidViewModel(application)
         return exerciseListRepository.listInsert(exerciseListEntity)
     }
 
+    // 운동목록 item 삭제메소드
+    fun deleteListItem(exerciseListEntity: ExerciseListEntity){
+        return exerciseListRepository.deleteListItem(exerciseListEntity)
+    }
+
 
 }
 

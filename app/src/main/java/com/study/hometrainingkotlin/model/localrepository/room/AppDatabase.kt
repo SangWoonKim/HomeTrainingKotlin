@@ -35,8 +35,9 @@ abstract class AppDatabase : RoomDatabase() {
                 INSTANCE?: Room.databaseBuilder(context.applicationContext,
                     AppDatabase::class.java,
                     "HomeTrainingKotlin.db")
-                    .fallbackToDestructiveMigration()
-                    .allowMainThreadQueries()
+                    //.fallbackToDestructiveMigration() // 기존 데이터를 버리고 다음 버전으로 넘어감
+                    .addMigrations(MIGRATION)
+                    //.allowMainThreadQueries() //메인스레드에서도 쿼리를 처리하는 것을 허용 하지만 권장되지는 않음
                     .build()
                     .also { INSTANCE = it }
              }
@@ -45,7 +46,7 @@ abstract class AppDatabase : RoomDatabase() {
         @JvmField
         val MIGRATION:Migration = object : Migration(1,2){
             override fun migrate(database: SupportSQLiteDatabase) {
-                TODO("Not yet implemented")
+
             }
 
         }

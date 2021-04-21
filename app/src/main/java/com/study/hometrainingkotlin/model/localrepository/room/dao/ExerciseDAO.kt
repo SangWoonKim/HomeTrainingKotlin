@@ -2,10 +2,7 @@ package com.study.hometrainingkotlin.model.localrepository.room.dao
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 
 import androidx.sqlite.db.SupportSQLiteQuery
 
@@ -19,7 +16,11 @@ interface ExerciseDAO {
     fun insertExerciseList(vararg exerciseListEntity: ExerciseListEntity)
 
 
-//    //운동목록 조회시 사용
+    //운동목록 조회시 사용
     @Query("SELECT * FROM exerciseresult ")
     fun exerciseListSelect(): LiveData<List<ExerciseListEntity>>
+
+    //운동목록에서 swipe시 아이템 삭제시 사용
+    @Delete
+    fun exerciseListDelete(vararg exerciseListEntity: ExerciseListEntity)
 }

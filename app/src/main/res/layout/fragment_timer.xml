@@ -7,7 +7,7 @@
     >
 
     <TextView
-        android:id="@+id/Timer"
+        android:id="@+id/TV_Timer_StopWatch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="00:00:00"
@@ -16,7 +16,7 @@
         android:layout_centerHorizontal="true" />
 
     <Button
-        android:id="@+id/BTN_Start"
+        android:id="@+id/BTN_Timer_Start"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="시작"
@@ -25,7 +25,7 @@
         android:textStyle="bold" />
 
     <Button
-        android:id="@+id/BTN_Record"
+        android:id="@+id/BTN_Timer_Record"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="리셋"
@@ -34,7 +34,7 @@
         android:textStyle="bold"/>
 
     <Button
-        android:id="@+id/BTN_alarm"
+        android:id="@+id/BTN_Timer_Alarm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="운동설정"
@@ -60,7 +60,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/Record"
+                android:id="@+id/TV_Timer_Record"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="20dp" />
