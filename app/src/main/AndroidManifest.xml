@@ -14,7 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HomeTrainingKotlin"
         android:usesCleartextTraffic="true">
-        <activity android:name=".view.exercise.Body"></activity>
+        <activity android:name=".view.exercise.Loins"></activity>
+        <activity android:name=".view.exercise.Body" />
         <activity
             android:name=".view.Splash.initSplashView"
             android:screenOrientation="fullSensor"

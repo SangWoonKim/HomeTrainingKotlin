@@ -24,7 +24,7 @@ class ExerciseViewModel(application: Application): AndroidViewModel(application)
         ExerciseListRepository(application)
     }
 
-    //상체 부위 배열데이터를 반환
+    //운동선택 상체 부위 배열데이터를 반환
     fun getUppers() : MutableLiveData<ArrayList<ExerciseData>> {
         return exerciseRepository.getExerciseUpper()
     }
@@ -37,9 +37,9 @@ class ExerciseViewModel(application: Application): AndroidViewModel(application)
 //        return upperLiveData.postValue(exerciseRepository.getExerciseBody())
 //    }
 //
-//    fun getLoins() {
-//        return upperLiveData.postValue(exerciseRepository.getExerciseLoins())
-//    }
+    fun getLoins() : MutableLiveData<ArrayList<ExerciseData>> {
+        return exerciseRepository.getExerciseLoins()
+    }
 
     //운동목록 조회 메소드
     fun selectListItem(): LiveData<List<ExerciseListEntity>> {

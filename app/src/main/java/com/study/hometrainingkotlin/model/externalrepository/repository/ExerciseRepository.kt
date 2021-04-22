@@ -18,14 +18,17 @@ class ExerciseRepository {
         var exerciseUpperArray: ArrayList<ExerciseData> ?= null
         var exerciseUpperLiveArray: MutableLiveData<ArrayList<ExerciseData>> = MutableLiveData()
         lateinit var exerciseLowerArray: ArrayList<ExerciseData>
-        lateinit var exerciseLoinsArray: ArrayList<ExerciseData>
+        var exerciseLoinsArray: ArrayList<ExerciseData> ?= null
+        var exerciseLoinsLiveArray: MutableLiveData<ArrayList<ExerciseData>> = MutableLiveData()
         lateinit var exerciseBodyArray: ArrayList<ExerciseData>
         val responseData =
             RetrofitClient.RetrofitClient.getInstance().create(ExerciseInterface::class.java)
 
+        //singleton 인스턴스
         @JvmStatic
         private var exerciseRepository: ExerciseRepository? = null
 
+        //singleton
         @JvmStatic
         fun getInstance(): ExerciseRepository? {
             if (exerciseRepository == null) {
@@ -36,10 +39,13 @@ class ExerciseRepository {
     }
 
     //상체 부위 운동 조회
+    //return MutableLiveData<ArrayList<ExerciseData>>
     fun getExerciseUpper(): MutableLiveData<ArrayList<ExerciseData>> {
+        //exericseUpperArray의 객체가 생성되어있지 않은경우
         if (exerciseUpperArray == null) {
             var exerciseUppers: Call<ArrayList<ExerciseData>>? =
-                responseData.getExercisePartData("upper")
+                responseData.getExercisePartData("upper")               //upper부위에 대한 파라미터 정의 (where E_part = upper)
+            //retrofit의 call 객체가 생성되어있을 경우
             if (exerciseUppers != null) {
                 exerciseUppers.enqueue(object : Callback<ArrayList<ExerciseData>> {
                     override fun onResponse(
@@ -47,8 +53,11 @@ class ExerciseRepository {
                         response: Response<ArrayList<ExerciseData>>
                     ) {
                         Log.d(TAG, "응답코드" + response.code())
+                        //응답을 성공적으로 받았을 시 200번 신호 수신시
                         if (response.isSuccessful) {
+                            //json데이터 exerciseUpperArray에 삽입
                             exerciseUpperArray = response.body()!!
+                            //exerciseUpperArray의 데이터 exerciseUpperLiveArray에 삽입
                             exerciseUpperLiveArray.value = exerciseUpperArray
                         }
                     }
@@ -124,12 +133,12 @@ class ExerciseRepository {
     }
 
     //허리운동 조회
-    fun getExerciseLoins(): ArrayList<ExerciseData> {
-        if (exerciseLoinsArray == null) {
+    //if문 제거 이유 = 서버의 아이템이 변경될 때마다 해당 값을 다시 받아와야함
+    //              = 그 전에는 if문 덕분에 call객체가 있을 경우 불러오지 않게 했음으로 안됨
+   fun getExerciseLoins(): MutableLiveData<ArrayList<ExerciseData>> {
             var exerciseLoins: Call<ArrayList<ExerciseData>>? =
-                responseData.getExercisePartData("loinsr")
-            if (exerciseLoins != null) {
-                exerciseLoins.enqueue(object : Callback<ArrayList<ExerciseData>> {
+                responseData.getExercisePartData("loins")                   //loins부위에 대한 파라미터 정의 (where E_part = loins)
+                exerciseLoins!!.enqueue(object : Callback<ArrayList<ExerciseData>> {
                     override fun onResponse(
                         call: Call<ArrayList<ExerciseData>>,
                         response: Response<ArrayList<ExerciseData>>
@@ -137,6 +146,7 @@ class ExerciseRepository {
                         Log.d(TAG, "응답코드" + response.code())
                         if (response.isSuccessful) {
                             exerciseLoinsArray = response.body()!!
+                            exerciseLoinsLiveArray.value = exerciseLoinsArray
                         }
                     }
 
@@ -145,10 +155,6 @@ class ExerciseRepository {
                     }
 
                 })
-            }
-            return exerciseLoinsArray
-        }else{
-            return exerciseLoinsArray
-        }
+            return exerciseLoinsLiveArray
     }
 }

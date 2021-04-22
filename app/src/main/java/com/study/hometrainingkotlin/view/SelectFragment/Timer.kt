@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment
 import com.study.hometrainingkotlin.R
 import java.lang.Exception
 
+//주석처리된 곳은 Thread를 이용하여 message객체를 handler에 보내는 방식의 구현   (좋은 방법)
+//현재는 handler를 이용하여 계속 UIThread에 message를 보내 화면갱신이 일어나게함 (좋은 방법이 아님),(코드 수를 줄이기 위함 그리고 메인스레드에 부담이 덜 가는것 같아 사용중)
 
 class Timer : Fragment(), View.OnClickListener {
     //View정의
@@ -42,31 +44,33 @@ class Timer : Fragment(), View.OnClickListener {
     private var mainHandler = object : Handler(Looper.getMainLooper()){
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
-            stopWatch!!.text = msg.obj.toString()
+//            stopWatch!!.text = msg.obj.toString()
+            stopWatch!!.text = getTime()
+            this.sendEmptyMessage(0)
         }
     }
 
     //핸들러에 메시지를 보내기 위한 스레드
-    private var updateWatchThread = Thread {
-        while (true) {
-            if (threadState) {
-                try {
-                    var message: Message = Message.obtain()     //빈메시지 객체를 반환 받음
-                    message.obj = getTime()                     //메시지에 데이터 삽입
-                    message.what = 0
-                    mainHandler.sendMessage(message)            //핸들러에 메시지 보냄
-                } catch (e: InterruptedException) {
-                    e.printStackTrace()
-                }
-            }else if (!threadState){
-                try {
-                    Thread.yield()                              //스레드 정지
-                }catch (e:Exception){
-                    e.printStackTrace()
-                }
-            }
-        }
-    }
+//    private var updateWatchThread = Thread {
+//        while (true) {
+//            if (threadState) {
+//                try {
+//                    var message: Message = Message.obtain()     //빈메시지 객체를 반환 받음
+//                    message.obj = getTime()                     //메시지에 데이터 삽입
+//                    message.what = 0
+//                    mainHandler.sendMessage(message)            //핸들러에 메시지 보냄
+//                } catch (e: InterruptedException) {
+//                    e.printStackTrace()
+//                }
+//            }else if (!threadState){
+//                try {
+//                    Thread.yield()                              //스레드 정지
+//                }catch (e:Exception){
+//                    e.printStackTrace()
+//                }
+//            }
+//        }
+//    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -87,7 +91,7 @@ class Timer : Fragment(), View.OnClickListener {
         BTN_Timer_Start!!.setOnClickListener(this)
         BTN_Timer_Alarm!!.setOnClickListener(this)
         BTN_Timer_Record!!.setOnClickListener(this)
-        updateWatchThread.start()
+//        updateWatchThread.start()
 
     }
 
@@ -110,34 +114,33 @@ class Timer : Fragment(), View.OnClickListener {
     private fun startStopWatch(){
         when(status){
             INIT -> { //초기 시작시
-                baseTime =
-                    SystemClock.elapsedRealtime()            //elapsedRealtime() 기기가 부팅된 시점부터 현재까지의 시간간격을 ms단위로 출력하는 메소드(여기서는 클릭후 부터 시간을 반환)
-               // mainHandler.sendEmptyMessage(0)            //핸들러에서 메시지를 보냄(0이라는 메시지 제목) 즉 화면갱신 시작
-                BTN_Timer_Start!!.text = "멈춤"              //시작버튼 누를시 텍스트 변경
+                baseTime = SystemClock.elapsedRealtime()         //elapsedRealtime() 기기가 부팅된 시점부터 현재까지의 시간간격을 ms단위로 출력하는 메소드(여기서는 클릭후 부터 시간을 반환)
+                mainHandler.sendEmptyMessage(0)            //핸들러에서 메시지를 보냄(0이라는 메시지 제목) 즉 화면갱신 시작
+                BTN_Timer_Start!!.text = "멈춤"                  //시작버튼 누를시 텍스트 변경
                 BTN_Timer_Record!!.text = "기록"
                 BTN_Timer_Record!!.isEnabled = true
-                threadState = true                           //쓰레드 시작상태 변경
-                status = RUNNING                             //상태 변경(실행중)
+//                threadState = true                             //쓰레드 시작상태 변경
+                status = RUNNING                                 //상태 변경(실행중)
             }
 
             RUNNING -> { // 실행중일시
-                //mainHandler.removeMessages(0)              //핸들러에 메시지 삭제(0이라는 메시지 제목) 즉 화면갱신 중단
+                mainHandler.removeMessages(0)              //핸들러에 메시지 삭제(0이라는 메시지 제목) 즉 화면갱신 중단
                 pauseTime = SystemClock.elapsedRealtime()
                 BTN_Timer_Start!!.text = "다시시작"
                 BTN_Timer_Record!!.text = "초기화"
-                threadState = false                          //쓰레드 시작상태 변경
+//                threadState = false                            //쓰레드 시작상태 변경
 //                updateWatchThread
-                status = PAUSE                               //상태 변경(정지)
+                status = PAUSE                                   //상태 변경(정지)
             }
 
             PAUSE -> {  //정지상태일시
                 var reStart = SystemClock.elapsedRealtime()
                 baseTime += (reStart - pauseTime)
-               // mainHandler.sendEmptyMessage(0)
-                threadState = true                           //쓰레드 시작상태 변경
+                mainHandler.sendEmptyMessage(0)
+//                threadState = true                             //쓰레드 시작상태 변경
                 BTN_Timer_Start!!.text = "멈춤"
                 BTN_Timer_Record!!.text = "기록"
-                status = RUNNING                            //상태 변경 (시작)
+                status = RUNNING                                 //상태 변경 (시작)
             }
 
         }

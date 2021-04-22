@@ -9,6 +9,7 @@ import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import com.study.hometrainingkotlin.R
 import com.study.hometrainingkotlin.view.exercise.Body
+import com.study.hometrainingkotlin.view.exercise.Loins
 
 class Exercise: Fragment(),View.OnClickListener {
 
@@ -38,6 +39,9 @@ class Exercise: Fragment(),View.OnClickListener {
         when(v!!.id){
             R.id.IMG_BTN_Upper -> { val upper = Intent(activity,Body::class.java)
                 startActivity(upper)}
+
+            R.id.IMG_BTN_Loins -> { val loins = Intent(activity,Loins::class.java)
+                startActivity(loins)}
         }
     }
 }
