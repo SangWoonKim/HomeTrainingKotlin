@@ -25,17 +25,22 @@ interface BasicActivity {
     var listView: RecyclerView?
 
     //어뎁터 연결 및 이벤트 정의 메소드
-    fun setAdapterAndEvent(recyclerView: RecyclerView?,
-                           exercisePartData: ArrayList<ExerciseData>?,
-                           context: Context,
-                           application: Application) {
+    fun setAdapterAndEvent(recyclerView: RecyclerView?,                             //리사이클러뷰
+                           exercisePartData: ArrayList<ExerciseData>?,              //어뎁터 생성할 때 필요한 배열
+                           context: Context,                                        //다이얼로그 및 inflater생성시 필요한 context
+                           application: Application) {                              //이미지 경로 및 패키지 경로를 알기위한 application
         if (adapter == null) {
+            //어뎁터 생성
             adapter = ExerciseAdapter(exercisePartData!!,
+                    //어뎁터의 아이템 클릭 리스너
                     object : ExerciseAdapter.OnItemClickListener {
                         override fun onItemClick(v: View, position: Int) {
                             Log.d("listPostition", "" + position)
+                            //다이얼로그 생성
                             val dialog = AlertDialog.Builder(context)
+                            //다이얼로그에 표시할 inflater 생성
                             val inflater = LayoutInflater.from(context)
+                            //inflater에 표시할 layout명시
                             val view = inflater.inflate(R.layout.dialog_view_exercise_body, null)
                             //리스트뷰에서 선택한 아이템의 인덱스 값 저장
                             val clickItem = exercisePartData!!.get(position)
@@ -68,8 +73,9 @@ interface BasicActivity {
                                     })
                                     .setPositiveButton("추가", object : DialogInterface.OnClickListener {
                                         override fun onClick(dialog: DialogInterface?, which: Int) {
-                                            //클릭한 아이템의 속성을 ExerciseListEntity에 넣어 인스턴스화하여 매개변수로 사용
+                                            //클릭한 아이템의 정보를 내부DB(Table:exerciseResult)에 삽입
                                             viewModel!!.insertListItem(
+                                                    //클릭한 아이템의 속성을 ExerciseListEntity에 넣어 인스턴스화하여 매개변수로 사용
                                                 ExerciseListEntity(
                                                     clickItem.E_part,
                                                     clickItem.E_name,
@@ -81,7 +87,6 @@ interface BasicActivity {
                                                 )
                                             )
                                         }
-
                                     }).create().show()
                         }
                     })

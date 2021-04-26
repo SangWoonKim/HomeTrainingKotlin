@@ -22,30 +22,31 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class Login : AppCompatActivity(), View.OnClickListener{
+class Login : AppCompatActivity(), View.OnClickListener {
 
-    companion object{
-        const val TAG : String ="hashKey"
+    companion object {
+        const val TAG: String = "hashKey"
     }
+
     private var BTN_login_Register: Button? = null
     private var BTN_login_Login: Button? = null
     private var TV_login_restricted: TextView? = null
     private var ET_login_Id: EditText? = null
-    private var ET_login_Password:EditText? = null
+    private var ET_login_Password: EditText? = null
     private lateinit var checkBoxSharedPreference: CheckBox
     private lateinit var idpwSharedPreference: SharedPreferences
     private var editor: Editor? = null
     //private var closelogin: BackPressCloseHandler = BackPressCloseHandler(this)
 
     //public var userinfo:Bundle?=null
-   // public var exercise_settings : Fragment? = Exercise_Settings()
-    private lateinit var theme : SharedPreferences
+    // public var exercise_settings : Fragment? = Exercise_Settings()
+    private lateinit var theme: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         theme = this.getSharedPreferences("com.study.hometrainingkotlin.prefs", MODE_PRIVATE)
         var themeChanged: String = theme.getString("themeSelect", "").toString()
-        when(themeChanged){
+        when (themeChanged) {
             "dark" -> DarkThemeUtil.applyTheme(DarkThemeUtil.DARK_MODE)
             "light" -> DarkThemeUtil.applyTheme(DarkThemeUtil.LIGHT_MODE)
             "default" -> DarkThemeUtil.applyTheme(DarkThemeUtil.DEFAULT_MODE)
@@ -63,9 +64,11 @@ class Login : AppCompatActivity(), View.OnClickListener{
         ET_login_Id = findViewById<View>(R.id.ET_login_Id) as EditText
         ET_login_Password = findViewById<View>(R.id.ET_login_Password) as EditText
 
+        //checkBox
         checkBoxSharedPreference = findViewById<View>(R.id.CB_login_Save) as CheckBox
         checkBoxSharedPreference!!.setOnClickListener(this)
 
+        //preference
         idpwSharedPreference = getSharedPreferences("getidpw", MODE_PRIVATE)
         editor = idpwSharedPreference.edit()
 
@@ -75,17 +78,16 @@ class Login : AppCompatActivity(), View.OnClickListener{
         val pw: String = idpwSharedPreference.getString("pw", "").toString()
         val check: Boolean = idpwSharedPreference.getBoolean("check", false)
 
-        //불러온 값을 각 view에 뿌림
 
         //불러온 값을 각 view에 뿌림
         ET_login_Id!!.setText(id)
         ET_login_Password!!.setText(pw)
-        checkBoxSharedPreference.setChecked(check)
+        checkBoxSharedPreference.isChecked = check
 
 
         //SQLite(assets에있는 db파일)파일 복사 시작 부분
         //쓰레드(코루틴 사용)
-        var copyStart:Job = CoroutineScope(Dispatchers.IO).launch {
+        var copyStart: Job = CoroutineScope(Dispatchers.IO).launch {
             DataBaseCopy.copyDatabase(context = applicationContext)
         }
         runBlocking {
@@ -95,13 +97,14 @@ class Login : AppCompatActivity(), View.OnClickListener{
 
 
     override fun onClick(v: View?) {
+        //체크박스 버튼 클릭시
         if (checkBoxSharedPreference.isChecked() == true) {
             val gid: String
             val gpw: String
             val gcheck: Boolean
             gid = ET_login_Id!!.text.toString()
             gpw = ET_login_Password!!.text.toString()
-            gcheck =checkBoxSharedPreference.isChecked()
+            gcheck = checkBoxSharedPreference.isChecked
             //editor에 상태 값 넣기
             editor!!.putString("id", gid)
             editor!!.putString("pw", gpw)
@@ -112,54 +115,61 @@ class Login : AppCompatActivity(), View.OnClickListener{
             editor!!.clear()
             editor!!.commit()
         }
-        when(v!!.id){
+
+        //버튼 클릭시
+        when (v!!.id) {
             R.id.TV_login_restricted -> {
                 var restricted_login = Intent(this, BottomNaviView::class.java)
-                Toast.makeText(this,R.string.restricted_login,Toast.LENGTH_LONG).show()
+                Toast.makeText(this, R.string.restricted_login, Toast.LENGTH_LONG).show()
                 restricted_login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 restricted_login.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(restricted_login)
             }
-            R.id.BTN_login_Register ->{
+            R.id.BTN_login_Register -> {
                 var register = Intent(this, Register::class.java)
                 startActivity(register)
             }
-            R.id.BTN_login_Login ->{
-                var loginHashMapData:HashMap<String,String> = HashMap<String,String>()
+            R.id.BTN_login_Login -> {
+                var loginHashMapData: HashMap<String, String> = HashMap<String, String>()
                 loginHashMapData.put("id", ET_login_Id?.text.toString())
                 loginHashMapData.put("nickname", ET_login_Password?.text.toString())
 
-                var loginInterface:LoginInterface = RetrofitClient.RetrofitClient.getInstance().create(LoginInterface::class.java)
+                var loginInterface: LoginInterface = RetrofitClient.RetrofitClient.getInstance().create(LoginInterface::class.java)
                 var callLogin: Call<Login_Data>? = loginInterface.post_Login(loginHashMapData)
                 if (callLogin != null) {
                     callLogin.enqueue(object : Callback<Login_Data> {
                         override fun onResponse(call: Call<Login_Data>, response: Response<Login_Data>) {
-                            Log.d(javaClass.simpleName,"상태코드"+response.code())
-                            if (response.isSuccessful){
-                                //콜백
-                                var loginResponse:Login_Data = response.body()!!
+                            Log.d(javaClass.simpleName, "상태코드" + response.code())
+                            if (response.isSuccessful) {
+                                //서버에서 조회시 아무것도 조회를 하지못하면 null을 반환하기에 만들었음
+                                if (response.body()!=null) {
+                                    //콜백
+                                    var loginResponse: Login_Data = response.body()!!
 
-                                var idLog:String = loginResponse.id
-                                //pw로 바꿔야함
-                                var pwLog:String = loginResponse.nickname
+                                    var idLog: String = loginResponse.id
+                                    //pw로 바꿔야함
+                                    var pwLog: String = loginResponse.nickname
 
-                                LoginLog.getInstance()!!.setloginIdLog(idLog)
-                                LoginLog.getInstance()!!.setloginPwLog(pwLog)
-                                val mainActivity:Intent = Intent(this@Login,BottomNaviView::class.java)
-                                mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                                mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                startActivity(mainActivity)
+                                    LoginLog.getInstance()!!.setloginIdLog(idLog)
+                                    LoginLog.getInstance()!!.setloginPwLog(pwLog)
+                                    val mainActivity: Intent = Intent(this@Login, BottomNaviView::class.java)
+                                    mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                                    mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    startActivity(mainActivity)
+                                }else if(response.body()==null){
+                                    Toast.makeText(this@Login,"비밀번호 또는 id를 확인하세요",Toast.LENGTH_SHORT).show()
+                                }
                             }
                         }
 
                         override fun onFailure(call: Call<Login_Data>, t: Throwable) {
-                            Log.d(javaClass.simpleName,"상태코드"+t.message)
+                            Log.d(javaClass.simpleName, "상태코드" + t.message)
                         }
 
                     }
                     )
                 }
-                
+
             }
         }
     }

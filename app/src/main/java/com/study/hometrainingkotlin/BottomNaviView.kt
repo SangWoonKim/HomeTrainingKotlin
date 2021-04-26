@@ -12,6 +12,9 @@ import com.study.hometrainingkotlin.view.SelectFragment.*
 import com.study.hometrainingkotlin.view.SelectFragment.List
 
 class BottomNaviView : AppCompatActivity() {
+    //뒤로가기 버튼 시 사용 첫번째 뒤로가기 버튼 클릭시 현재시간 저장
+    private var backPressedTime: Long = 0
+
     //바텀네비게이션뷰 객체 정의
     private var navigationview: BottomNavigationView ?= null
     //프레그먼트 제어 정의
@@ -100,30 +103,27 @@ class BottomNaviView : AppCompatActivity() {
         if(stackTag5 != null && stackTag5.isVisible) {navigationView.menu.findItem(R.id.select_settings).isChecked = true }
     }
 
+    //뒤로가기 키 누를시 이벤트 정의
     override fun onBackPressed() {
-        var backKeyDownTime:Long = 0
-        //뒤로가기 키를 처음 눌렀거나,액션을 취한 후 500ms이후에 뒤로가기키를 누를 경우
-        if (System.currentTimeMillis() > backKeyDownTime + 500){
-            backKeyDownTime = System.currentTimeMillis()
-            Toast.makeText(this,"한 번 더 누르면 종료됩니다.",Toast.LENGTH_SHORT).show()
-            return
-        }
-        // fragmentStack이 존재하지 않을 경우
-        else if (fragmentManager!!.backStackEntryCount == 0){
-            finishAffinity()
-            System.runFinalization()
-            System.exit(0)
+
+        //마지막 프레그먼트 스택일경우 (스택이 없을 경우는 0으로 처리하면 됨
+        if (supportFragmentManager.backStackEntryCount ==1){
+            var currentTime:Long = System.currentTimeMillis()           //뒤로가기 버튼 클릭시 부터 시간을 측정
+            var intervalTime:Long = currentTime - backPressedTime       //처음 누른 후 두번째 백버튼 클릭한 시간 간격을 저장
+            if (intervalTime in 0..2000){                               //두번째 백버튼을 클릭한 시간차가 2000ms 이내 일 경우
+//                finishAffinity()                                          //모든 액티비티 닫음(부모액티비티도 없앰)
+                finish()                                                //현재 액티비티 닫음(이전 액티비티 스택이 있을경우 이전액티비티가 보여짐)
+            }else{                                                      //처음 백버튼을 누르거나 시간차가 2000ms 초과 일 경우
+                backPressedTime = currentTime                           //현재 측정된 시간을 backPressedTime에 저장
+                Toast.makeText(this,"한 번 더 누르면 종료됩니다.",Toast.LENGTH_SHORT).show()
+                return
+            }
+        }else{
+            super.onBackPressed()
+            //뒤로가기 아이콘 포커스 처리
+            val itemFocus = findViewById<View>(R.id.bottomnaviview) as BottomNavigationView
+            backButtonUpdateIcon(itemFocus)
         }
 
-        //뒤로가기 키를 액션을 취한 후 500ms이내에 뒤로가기를 누를경우
-        if (System.currentTimeMillis() <= backKeyDownTime +500){
-            this.moveTaskToBack(true) //현재 실행 앱을 백그라운드로 이동
-            this.finish()//앱 종료
-            android.os.Process.killProcess(android.os.Process.myPid())//앱 프로세스 종료
-        }
-
-        super.onBackPressed()
-        val itemFocus = findViewById<View>(R.id.bottomnaviview) as BottomNavigationView
-        backButtonUpdateIcon(itemFocus)
     }
 }

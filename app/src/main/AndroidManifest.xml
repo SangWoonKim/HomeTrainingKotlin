@@ -14,7 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HomeTrainingKotlin"
         android:usesCleartextTraffic="true">
-        <activity android:name=".view.exercise.Loins"></activity>
+        <activity android:name=".view.alarm.Alarm"></activity>
+        <activity android:name=".view.exercise.Loins" />
         <activity android:name=".view.exercise.Body" />
         <activity
             android:name=".view.Splash.initSplashView"
@@ -29,6 +30,18 @@
         <activity android:name=".view.Login.Login" />
         <activity android:name=".view.Register.Register" />
         <activity android:name=".BottomNaviView" />
+
+        <service
+            android:name=".util.service.ExerciseAlarmService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="RUNNING" />
+                <action android:name="COMPLETE_EXERCISE" />
+                <action android:name="CLOSE" />
+                <action android:name="SET_ALARM" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

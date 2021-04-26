@@ -1,5 +1,6 @@
 package com.study.hometrainingkotlin.view.SelectFragment
 
+import android.content.Intent
 import android.os.*
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.study.hometrainingkotlin.R
+import com.study.hometrainingkotlin.view.alarm.Alarm
 import java.lang.Exception
 
 //주석처리된 곳은 Thread를 이용하여 message객체를 handler에 보내는 방식의 구현   (좋은 방법)
@@ -101,7 +103,8 @@ class Timer : Fragment(), View.OnClickListener {
                 startStopWatch()
             }
             R.id.BTN_Timer_Alarm -> {
-                //다른 액티비티 열기
+                val alarm : Intent = Intent(activity,Alarm::class.java)
+                startActivity(alarm)
             }
             R.id.BTN_Timer_Record -> {
                 recordStopWatch()

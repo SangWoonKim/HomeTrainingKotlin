@@ -15,28 +15,24 @@ class Loins: AppCompatActivity(),BasicActivity {
 
     //interface 전역변수
     override var adapter: ExerciseAdapter ?= null
-    //viewModel의존성 주입
-    override val viewModel: ExerciseViewModel by viewModels()
+    override val viewModel: ExerciseViewModel by viewModels()           //viewModel의존성 주입
     override var listView: RecyclerView ?=null
-
-    //Loins전역변수
-    private var exerciseAdapter : ExerciseAdapter ?= null
-    private var list_Loins: RecyclerView ? =null
-    private var loinsList: ArrayList<ExerciseData> ?= null
+    //클래스 전역변수
+    private var loinsList: ArrayList<ExerciseData> ?= null              //listView에 나타낼 데이터 저장
 
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.loins_activity)
-//        list_Loins = findViewById(R.id.List_Loins)
         listView= findViewById(R.id.List_Loins)
 
-
-        viewModel.getLoins().observe(this,{
-            changeData->
-            loinsList = changeData
-            setAdapterAndEvent(listView,loinsList,this@Loins,application)
+        //observer등록
+        viewModel.getLoins()
+                .observe(this,{     //해당 액티비티의 생명주기 등록
+                    changeData->           //데이터 변화시 changeData에 데이터가 들어옴 이때 MutableLiveData형식이 아닌 ArrayList형식으로 반환(<>안에 명시한 형식대로 들어옴)
+                    loinsList = changeData //해당 데이터를 삽입
+                    setAdapterAndEvent(listView,loinsList,this@Loins,application)       //인터페이스 메소드 어뎁터연결 및 아이템 클릭시 alertDialog이벤트가 되어있음
         })
     }
 

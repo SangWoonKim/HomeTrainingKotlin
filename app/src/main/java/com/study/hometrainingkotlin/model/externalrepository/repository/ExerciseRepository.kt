@@ -10,7 +10,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 //서버에서 데이터를 받아 저장하는 클래스 Repository
-
+//인터페이스 또는 추상클래스를 이용하여 보일러플레이트 코드 정리해야함
 class ExerciseRepository {
     private val TAG: String = javaClass.simpleName
 
