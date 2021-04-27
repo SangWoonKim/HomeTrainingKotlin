@@ -22,34 +22,25 @@ import kotlinx.coroutines.launch
 
 class ExerciseAlarmNotification: BroadcastReceiver() {
 
-    private var exerciseAlarmService: ExerciseAlarmService? = null
-    private var notificationManager: NotificationManager? = null
     private var context:Context ?= null
-    private var exerciseService = Intent(context,ExerciseAlarmService::class.java)
+    private var exerciseService :Intent ?=null
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onReceive(context: Context?, intent: Intent?) {
         this.context = context
+        //String값을 전달할 component정의
+        exerciseService = Intent(context,ExerciseAlarmService::class.java)
         var getStatus = intent!!.extras!!.getString("state")
 
-        if (getStatus!! == "alarm_on") {
-            createNotification()
-        } else if (getStatus!! == "alarm_off") {
-            cancelNotificaiton()
-        }
+        exerciseService?.apply { putExtra("state", getStatus) }
+        createNotification()
     }
 
 
     //오레오 이후버전만 허용
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotification() {
-        context!!.startForegroundService(exerciseService)
+        context!!.startService(exerciseService)
     }
-
-    private fun cancelNotificaiton(){
-        context!!.stopService(exerciseService)
-    }
-
-
 
 }

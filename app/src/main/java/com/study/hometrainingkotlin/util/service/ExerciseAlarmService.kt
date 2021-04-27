@@ -27,14 +27,13 @@ class ExerciseAlarmService : Service() {
      * */
     private var alarmManager: AlarmManager? = null
     private val exerciseServiceBinder: IBinder? = ExerciseAlarmServiceBinder()
-    private var mediaPlayer: MediaPlayer? = null
+    private var mediaPlayer: MediaPlayer ?= null
 
     //executor서비스
     private var executorService: ExecutorService? = null
     private lateinit var stopwatch: Runnable
     var second: Int = 0
 
-    //        private set
     companion object {
         var appWidgetBroadCast: ExerciseWidget = ExerciseWidget()
     }
@@ -44,6 +43,9 @@ class ExerciseAlarmService : Service() {
 
     //notification 갱신 삭제를 위한 객체
     private var notificationManager: NotificationManager? = null
+
+    //객체 상태 저장
+    private var mediaPlayerState:Boolean=false
 
     /**
      * 바인더를 반환하기위한 내부클래스
@@ -78,10 +80,7 @@ class ExerciseAlarmService : Service() {
         return exerciseServiceBinder
     }
 
-    override fun onRebind(intent: Intent?) {
-        super.onRebind(intent)
-    }
-
+    //ExerciseAlarmNotification을 통해 작동되는 메소드(startService호출됨)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d("서비스 시작", "onStartCommand Call")
 
@@ -89,34 +88,23 @@ class ExerciseAlarmService : Service() {
         //첫번 째 인자가 boolean으로 평가되는 표현식
         //값을 받아 true이면 실행
         // false면 AssertionError를 예외를 발생시키는 예약어
+        //근데 여기서 에러가 잡히네 이거...
         assert(getState != null)
         when(getState){
             "alarm_on" ->{
-
+                complete()
             }
 
             "alarm_off" ->{
-
+                initialize()
             }
             //default
             else ->{
-
-            }
-        }
-        if (intent != null) {
-            val action = intent.action
-            if (ExerciseAlarmAction.SET_ALARM == action) {
-                setAlarm()
-            } else if (ExerciseAlarmAction.RUNNING == action) {
-                running()
-            } else if (ExerciseAlarmAction.CLOSE == action) {
-                close()
-            } else if (ExerciseAlarmAction.COMPLETE_EXERCISE == action) {
-                complete()
+                defaultState()
             }
         }
         //인텐트 남기기
-        return START_REDELIVER_INTENT
+        return START_STICKY
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -133,10 +121,8 @@ class ExerciseAlarmService : Service() {
     //appWidger을 위한 인텐트필터 암시적으로 등록
     private fun registerBroadCast() {
         val filter = IntentFilter()
-        filter.addAction(ExerciseAlarmAction.CLOSE)
-        filter.addAction(ExerciseAlarmAction.COMPLETE_EXERCISE)
-        filter.addAction(ExerciseAlarmAction.RUNNING)
-        filter.addAction(ExerciseAlarmAction.SET_ALARM)
+        filter.addAction(ExerciseAlarmAction.ALARM_ON)
+        filter.addAction(ExerciseAlarmAction.ALARM_OFF)
         registerReceiver(appWidgetBroadCast, filter)
     }
 
@@ -199,32 +185,33 @@ class ExerciseAlarmService : Service() {
     }
 
 
+    //알람이 울리면 실행
+    private fun complete() {
+        mediaPlayer = MediaPlayer.create(this,R.raw.test)
+        mediaPlayer!!.start()
+        mediaPlayerState=true
+
+    }
+    //알람을 멈출때 사용
+    private fun initialize(){
+        if (mediaPlayerState) {
+            mediaPlayer!!.stop()
+            mediaPlayer!!.reset()
+            mediaPlayer!!.release()
+            mediaPlayerState==false
+        }
+    }
+    //초기 상태로 변환
+    private fun defaultState() {
+        if (mediaPlayerState) {
+            initialize()
+            mediaPlayer=null
+        }
+    }
 
     /**
      * bindService를 위한 메소드
      * */
-
-    //정지
-    fun complete() {
-        //play
-    }
-
-    //시작
-    fun setAlarm() {
-        //threadStart
-
-    }
-
-    //실행중
-    fun running() {
-        //handler를 이용한 화면 표시
-    }
-
-    //초기
-    fun close() {
-        //stop
-    }
-
 
     //알람매니저 설정
     @RequiresApi(Build.VERSION_CODES.O)
@@ -238,6 +225,7 @@ class ExerciseAlarmService : Service() {
 //        timerRunning()
         executorService!!.execute(stopwatch)
 //        setNotification(second)
+
     }
 
 
@@ -249,7 +237,10 @@ class ExerciseAlarmService : Service() {
             Intent(this, ExerciseAlarmNotification::class.java).putExtra("state", "alarm_off")
         var pendingIntent: PendingIntent =
             PendingIntent.getBroadcast(this, 0, intentValue, PendingIntent.FLAG_UPDATE_CURRENT)
+        //알람메니저 취소
         alarmManager!!.cancel(pendingIntent)
+        //ExerciseAlarmNotification에 "alarm_off"방송
+        sendBroadcast(intentValue)
 //        stopSelf()
         executorService?.shutdownNow()
         //알림삭제
@@ -263,13 +254,16 @@ class ExerciseAlarmService : Service() {
         second =0
         Log.d("offTime()호출", "offTime")
     }
-    @RequiresApi(Build.VERSION_CODES.O)
+
+    //onDestroy에서 사용되는 메소드드
+   @RequiresApi(Build.VERSION_CODES.O)
     private fun closeService(){
         var intentValue =
             Intent(this, ExerciseAlarmNotification::class.java).putExtra("state", "alarm_off")
         var pendingIntent: PendingIntent =
             PendingIntent.getBroadcast(this, 0, intentValue, PendingIntent.FLAG_UPDATE_CURRENT)
         alarmManager!!.cancel(pendingIntent)
+        sendBroadcast(intentValue)
         executorService?.shutdownNow()
         unRegisterBroadCast()
         //알림삭제

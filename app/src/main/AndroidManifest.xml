@@ -38,19 +38,13 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="RUNNING" />
-                <action android:name="COMPLETE_EXERCISE" />
-                <action android:name="CLOSE" />
-                <action android:name="SET_ALARM" />
+                <action android:name="com.study.hometrainingkotlin.util.intentfilter.ExerciseAlarmAction.ALARM_ON"/>
+                <action android:name="com.study.hometrainingkotlin.util.intentfilter.ExerciseAlarmAction.ALARM_OFF"/>
             </intent-filter>
         </service>
         <receiver android:name=".util.notification.ExerciseAlarmNotification"
             android:enabled="true"
             android:exported="true">
-            <intent-filter>
-                <action android:name="alarm_on"/>
-                <action android:name="alarm_off"/>
-            </intent-filter>
         </receiver>
 
     </application>

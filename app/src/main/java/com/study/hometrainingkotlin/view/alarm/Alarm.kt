@@ -28,6 +28,8 @@ class Alarm : AppCompatActivity(), View.OnClickListener {
     private var calendar: Calendar? = null
     private var exerciseAlarmService: ExerciseAlarmService? = null
     private var serviceState:Boolean=true
+
+    //IBinder에 대한 유무를 확인하는 인터페이스 같음
     private var serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             exerciseAlarmService =
