@@ -19,23 +19,23 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
-class ExerciseAlarmNotification {
+
+class ExerciseAlarmNotification: BroadcastReceiver() {
 
     private var exerciseAlarmService: ExerciseAlarmService? = null
     private var notificationManager: NotificationManager? = null
+    private var context:Context ?= null
+    private var exerciseService = Intent(context,ExerciseAlarmService::class.java)
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onReceive(context: Context?, intent: Intent?) {
+        this.context = context
+        var getStatus = intent!!.extras!!.getString("state")
 
-    //수신자(서비스에서 액션값이 전달됨)
-    val broadcastReceiver = object : BroadcastReceiver() {
-        @RequiresApi(Build.VERSION_CODES.O)
-        override fun onReceive(context: Context?, intent: Intent?) {
-            var getStatus = intent!!.extras!!.getString("state")
-
-            if (getStatus!! == "alarm_on") {
-                createNotification()
-            } else if (getStatus!! == "alarm_off") {
-                cancelNotificaiton()
-            }
+        if (getStatus!! == "alarm_on") {
+            createNotification()
+        } else if (getStatus!! == "alarm_off") {
+            cancelNotificaiton()
         }
     }
 
@@ -43,38 +43,13 @@ class ExerciseAlarmNotification {
     //오레오 이후버전만 허용
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotification() {
-        var remoteViews: RemoteViews
-        var notificationBuilder: NotificationCompat.Builder
-        var pendingIntent: PendingIntent
-        var activityOpenIntent = Intent(exerciseAlarmService, Alarm::class.java)
-
-        //remoteView클릭시 나타낼 액티비티를 pendingIntent를 이용하여정의
-        pendingIntent = PendingIntent.getActivity(exerciseAlarmService, 0, activityOpenIntent, 0)
-        remoteViews = RemoteViews(exerciseAlarmService!!.packageName, R.layout.noti_widget)
-        notificationManager = exerciseAlarmService!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        var channel = NotificationChannel(
-            "noti_channel",
-            "noti_chaannel",
-            NotificationManager.IMPORTANCE_HIGH
-        )
-        channel.description = "운동설정 시간"
-        notificationManager!!.createNotificationChannel(channel)
-
-        notificationBuilder = NotificationCompat.Builder(exerciseAlarmService!!, "noti_channel")
-            notificationBuilder
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentIntent(pendingIntent)
-                .setCustomContentView(remoteViews)
-        var notification : Notification = notificationBuilder.build()
-        notification.contentIntent = pendingIntent
-        exerciseAlarmService!!.startForeground(0x123,notification)
+        context!!.startForegroundService(exerciseService)
     }
 
     private fun cancelNotificaiton(){
-        if (notificationManager == null) {
-            notificationManager!!.cancel(0x123)
-        }
+        context!!.stopService(exerciseService)
     }
+
+
 
 }
