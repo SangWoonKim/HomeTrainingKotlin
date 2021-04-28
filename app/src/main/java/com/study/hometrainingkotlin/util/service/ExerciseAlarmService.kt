@@ -209,6 +209,24 @@ class ExerciseAlarmService : Service() {
         }
     }
 
+    //onDestroy에서 사용되는 메소드드
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun closeService(){
+        var intentValue =
+            Intent(this, ExerciseAlarmNotification::class.java).putExtra("state", "alarm_off")
+        var pendingIntent: PendingIntent =
+            PendingIntent.getBroadcast(this, 0, intentValue, PendingIntent.FLAG_UPDATE_CURRENT)
+        alarmManager!!.cancel(pendingIntent)
+        sendBroadcast(intentValue)
+        executorService?.shutdownNow()
+        unRegisterBroadCast()
+        //알림삭제
+        notificationManager?.cancelAll()
+        //알림채널삭제
+        notificationManager?.deleteNotificationChannel("1")
+        executorService = null
+    }
+
     /**
      * bindService를 위한 메소드
      * */
@@ -255,23 +273,7 @@ class ExerciseAlarmService : Service() {
         Log.d("offTime()호출", "offTime")
     }
 
-    //onDestroy에서 사용되는 메소드드
-   @RequiresApi(Build.VERSION_CODES.O)
-    private fun closeService(){
-        var intentValue =
-            Intent(this, ExerciseAlarmNotification::class.java).putExtra("state", "alarm_off")
-        var pendingIntent: PendingIntent =
-            PendingIntent.getBroadcast(this, 0, intentValue, PendingIntent.FLAG_UPDATE_CURRENT)
-        alarmManager!!.cancel(pendingIntent)
-        sendBroadcast(intentValue)
-        executorService?.shutdownNow()
-        unRegisterBroadCast()
-        //알림삭제
-        notificationManager?.cancelAll()
-        //알림채널삭제
-        notificationManager?.deleteNotificationChannel("1")
-        executorService = null
-    }
+
 
 
     //notification값 갱신

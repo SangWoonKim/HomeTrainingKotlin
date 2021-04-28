@@ -1,0 +1,34 @@
+package com.study.hometrainingkotlin.util.application
+
+import android.app.Application
+
+class ServiceApplication: Application() {
+
+    //singleton
+    companion object{
+        private var serviceApplicationInstance: ServiceApplication ?= null
+
+        fun getInstance(): ServiceApplication? {
+            return serviceApplicationInstance
+        }
+    }
+
+    //서비스에 접근이 가능한 클래스
+    private var serviceInterface: ServiceInterface ?=null
+
+    fun getServiceInterface(): ServiceInterface?
+    {
+        return serviceInterface
+    }
+
+    //Application클래스는 앱실행과 동시에 생성됨
+    //Application클래스의 객체는 앱의 생명주기와 관련되어있음으로
+    //앱이 죽기 전까지 계속 살아있음 즉 홈화면으로 나가도 통신이 가능함
+    override fun onCreate() {
+        super.onCreate()
+        //이 클래스가 메모리에 올라감과 동시에 객체가 생성됨
+        serviceApplicationInstance = this
+        //객체 생성
+        serviceInterface = ServiceInterface(applicationContext)
+    }
+}
