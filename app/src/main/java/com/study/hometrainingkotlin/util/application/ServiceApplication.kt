@@ -3,6 +3,9 @@ package com.study.hometrainingkotlin.util.application
 import android.app.Application
 
 class ServiceApplication: Application() {
+    //login과 alarmLog의 전역변수를 여기에 넣어서 사용가능 하나 일단은
+    //따로 구현 후 정리 및 리팩토링하기
+
 
     //singleton
     companion object{

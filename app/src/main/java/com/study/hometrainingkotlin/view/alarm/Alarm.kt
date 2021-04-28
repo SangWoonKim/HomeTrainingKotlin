@@ -16,6 +16,7 @@ import android.widget.TimePicker
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.study.hometrainingkotlin.R
+import com.study.hometrainingkotlin.static.AlarmLog
 import com.study.hometrainingkotlin.util.application.ServiceApplication
 import com.study.hometrainingkotlin.util.service.ExerciseAlarmService
 import kotlinx.android.synthetic.main.alarm_activity.*
@@ -43,18 +44,20 @@ class Alarm : AppCompatActivity(), View.OnClickListener {
     }
 
 
-
-
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onClick(v: View?) {
         when (v!!.id) {
             //알람설정버튼
             R.id.BTN_Alarm_Start -> {
-                //설정한 시간 정보 켈린더 객체에 저장
-                calendar!!.set(Calendar.HOUR_OF_DAY, timePicker!!.hour)
-                calendar!!.set(Calendar.MINUTE, timePicker!!.minute)
-                //application객체의 인스턴스를 얻어와 서비스와 통신
-                ServiceApplication.getInstance()!!.getServiceInterface()!!.setTime(calendar!!)
+                if (!AlarmLog.getAlarmLog()!!.alarmState) {
+                    //설정한 시간 정보 켈린더 객체에 저장
+                    calendar!!.set(Calendar.HOUR_OF_DAY, timePicker!!.hour)
+                    calendar!!.set(Calendar.MINUTE, timePicker!!.minute)
+                    //application객체의 인스턴스를 얻어와 서비스와 통신
+                    ServiceApplication.getInstance()!!.getServiceInterface()!!.setTime(calendar!!)
+                }else{
+                    Toast.makeText(this,"오늘의 운동은 끝났습니다",Toast.LENGTH_SHORT).show()
+                }
             }
 
             //알람삭제버튼

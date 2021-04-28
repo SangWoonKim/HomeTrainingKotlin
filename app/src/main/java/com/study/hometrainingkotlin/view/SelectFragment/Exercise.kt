@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment
 import com.study.hometrainingkotlin.R
 import com.study.hometrainingkotlin.view.exercise.Body
 import com.study.hometrainingkotlin.view.exercise.Loins
+import com.study.hometrainingkotlin.view.exercise.Lower
+import com.study.hometrainingkotlin.view.exercise.Upper
 
 class Exercise: Fragment(),View.OnClickListener {
 
@@ -37,11 +39,17 @@ class Exercise: Fragment(),View.OnClickListener {
 
     override fun onClick(v: View?) {
         when(v!!.id){
-            R.id.IMG_BTN_Upper -> { val upper = Intent(activity,Body::class.java)
+            R.id.IMG_BTN_Upper -> { val upper = Intent(activity,Upper::class.java)
                 startActivity(upper)}
 
             R.id.IMG_BTN_Loins -> { val loins = Intent(activity,Loins::class.java)
                 startActivity(loins)}
+
+            R.id.IMG_BTN_Lower -> { val lower =Intent(activity,Lower::class.java)
+                startActivity(lower)}
+
+            R.id.IMG_BTN_Body -> { val body =Intent(activity,Body::class.java)
+                startActivity(body)}
         }
     }
 }

@@ -1,29 +1,12 @@
 package com.study.hometrainingkotlin.static
 
+//Login정보 저장
 class LoginLog {
 
-//     var loginIdLog:String
-//        get() {
-//            return loginIdLog
-//        }
-//        set(LoginIdLog: String) {
-//            this.loginIdLog = LoginIdLog
-//        }
-//
-//     var loginPwLog:String
-//        get() {
-//            return loginPwLog
-//        }
-//        set(LoginPwLog: String) {
-//            this.loginPwLog = LoginPwLog
-//        }
-
-//싱글톤
-
     var loginIdLog:String ?= null
-
     var loginPwLog:String ?= null
 
+    //singleton
     companion object{
         @JvmStatic
         private var INSTANCE:LoginLog ?=null

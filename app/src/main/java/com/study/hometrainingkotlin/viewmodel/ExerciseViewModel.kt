@@ -29,17 +29,24 @@ class ExerciseViewModel(application: Application): AndroidViewModel(application)
         return exerciseRepository.getExerciseUpper()
     }
 
-//    fun getLowers() {
-//        return upperLiveData.postValue(exerciseRepository.getExerciseLower())
-//    }
-//
-//    fun getBodies() {
-//        return upperLiveData.postValue(exerciseRepository.getExerciseBody())
-//    }
-//
-    fun getLoins() : MutableLiveData<ArrayList<ExerciseData>> {
+    fun getLowers(): MutableLiveData<ArrayList<ExerciseData>>? {
+        return exerciseRepository.getExerciseLower()
+    }
+
+    fun getBodies(): MutableLiveData<ArrayList<ExerciseData>>? {
+        return exerciseRepository.getExerciseBody()
+    }
+
+    fun getLoins() : MutableLiveData<ArrayList<ExerciseData>>? {
         return exerciseRepository.getExerciseLoins()
     }
+
+    //exerciseReposititory의 LiveData를 공용으로 사용하게 됨으로 써
+    //아이템이 재사용됨 즉 서버에서 값을 받기 전까지 같은 아이템이 출력됨으로
+    //객체를 reset시켜야해서 사용됨
+//    fun exerciseResetGetData(){
+//        return exerciseRepository.dataReset()
+//    }
 
     //운동목록 조회 메소드
     fun selectListItem(): LiveData<List<ExerciseListEntity>> {

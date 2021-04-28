@@ -17,6 +17,7 @@ import com.study.hometrainingkotlin.model.localrepository.room.dao.ExerciseListE
 import com.study.hometrainingkotlin.view.adapter.ExerciseAdapter
 import com.study.hometrainingkotlin.viewmodel.ExerciseViewModel
 
+//인터페이스 및 추상클래스 적용을 하지 않은 클래스
 class Body : AppCompatActivity() {
 
     private var recyclerView:RecyclerView ?= null
@@ -32,7 +33,7 @@ class Body : AppCompatActivity() {
         setContentView(R.layout.body_activity)
         recyclerView=findViewById(R.id.bodylist)
 
-        exerciseViewModel.getUppers().observe(this,
+        exerciseViewModel.getBodies()?.observe(this,
             { changeData ->   //observing즉 데이터가 바뀌었을시 changeData에 저장됨 (람다식사용)
                 upperList = changeData   //adapter를 생성하기 위한 배열요소 upperList에 바뀐데이터 갱신
                 setAdapterAndEvent()
@@ -106,5 +107,11 @@ class Body : AppCompatActivity() {
         }else{
             exerciseAdapter!!.notifyDataSetChanged()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        //repository의 livedata객체를 초기화
+//        exerciseViewModel.exerciseResetGetData()
     }
 }

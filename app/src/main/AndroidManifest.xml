@@ -33,6 +33,9 @@
         <activity android:name=".view.Login.Login" />
         <activity android:name=".view.Register.Register" />
         <activity android:name=".BottomNaviView" />
+        <activity android:name=".view.exercise.AbstractBasicActivity"/>
+        <activity android:name=".view.exercise.Lower"/>
+        <activity android:name=".view.exercise.Upper"/>
 
         <service
             android:name=".util.service.ExerciseAlarmService"

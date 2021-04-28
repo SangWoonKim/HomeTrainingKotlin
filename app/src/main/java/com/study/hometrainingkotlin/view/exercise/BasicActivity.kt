@@ -18,7 +18,7 @@ import com.study.hometrainingkotlin.viewmodel.ExerciseViewModel
 
 
 //각 운동선택 액티비티의 코드량을 줄이기 위한 인터페이스
-
+//사용한곳 Loins클래스
 interface BasicActivity {
     var adapter: ExerciseAdapter?
     val viewModel: ExerciseViewModel?

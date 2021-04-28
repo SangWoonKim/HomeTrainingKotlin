@@ -10,18 +10,32 @@ import retrofit2.Callback
 import retrofit2.Response
 
 //서버에서 데이터를 받아 저장하는 클래스 Repository
-//인터페이스 또는 추상클래스를 이용하여 보일러플레이트 코드 정리해야함
-class ExerciseRepository {
-    private val TAG: String = javaClass.simpleName
+//삭제나 추가같은 것도 가능하나 이 앱에서는 그 기능이 필요하지 않음
+class ExerciseRepository :ExercisePartCall {
+    //인터페이스에서 사용하는 재정의한 변수
 
+    override val TAG: String = javaClass.simpleName
+    override val requestServer: ExerciseInterface? = responseData
+    override var exercisePartArray: ArrayList<ExerciseData>? = ArrayList()
+    override var exerciseLivePartArray: MutableLiveData<ArrayList<ExerciseData>>? = MutableLiveData()
+
+    private val TAG1: String = javaClass.simpleName
     companion object {
-        var exerciseUpperArray: ArrayList<ExerciseData> ?= null
-        var exerciseUpperLiveArray: MutableLiveData<ArrayList<ExerciseData>> = MutableLiveData()
-        lateinit var exerciseLowerArray: ArrayList<ExerciseData>
-        var exerciseLoinsArray: ArrayList<ExerciseData> ?= null
-        var exerciseLoinsLiveArray: MutableLiveData<ArrayList<ExerciseData>> = MutableLiveData()
-        lateinit var exerciseBodyArray: ArrayList<ExerciseData>
-        val responseData =
+        private var exerciseUpperArray: ArrayList<ExerciseData>? = null
+        private var exerciseUpperLiveArray: MutableLiveData<ArrayList<ExerciseData>> =
+            MutableLiveData()
+        private var exerciseLowerArray: ArrayList<ExerciseData>? = null
+        private var exerciseLowerLiveArray: MutableLiveData<ArrayList<ExerciseData>>? =
+            MutableLiveData()
+        private var exerciseLoinsArray: ArrayList<ExerciseData>? = null
+        private var exerciseLoinsLiveArray: MutableLiveData<ArrayList<ExerciseData>>? =
+            MutableLiveData()
+        private var exerciseBodyArray: ArrayList<ExerciseData>? = null
+        private var exerciseBodyLiveArray: MutableLiveData<ArrayList<ExerciseData>>? =
+            MutableLiveData()
+
+        //레트로핏을 이용한 서버에 요청하기 위한 객체
+        private val responseData =
             RetrofitClient.RetrofitClient.getInstance().create(ExerciseInterface::class.java)
 
         //singleton 인스턴스
@@ -38,6 +52,7 @@ class ExerciseRepository {
         }
     }
 
+
     //상체 부위 운동 조회
     //return MutableLiveData<ArrayList<ExerciseData>>
     fun getExerciseUpper(): MutableLiveData<ArrayList<ExerciseData>> {
@@ -52,7 +67,7 @@ class ExerciseRepository {
                         call: Call<ArrayList<ExerciseData>>,
                         response: Response<ArrayList<ExerciseData>>
                     ) {
-                        Log.d(TAG, "응답코드" + response.code())
+                        Log.d(TAG1, "응답코드" + response.code())
                         //응답을 성공적으로 받았을 시 200번 신호 수신시
                         if (response.isSuccessful) {
                             //json데이터 exerciseUpperArray에 삽입
@@ -63,7 +78,7 @@ class ExerciseRepository {
                     }
 
                     override fun onFailure(call: Call<ArrayList<ExerciseData>>, t: Throwable) {
-                        Log.d(TAG, "응답코드" + t.message)
+                        Log.d(TAG1, "응답코드" + t.message)
                     }
 
                 })
@@ -74,87 +89,58 @@ class ExerciseRepository {
         }
     }
 
+    /**
+     *데이터 재사용과 생명주기에 의한 빨리 클릭시 화면갱신이 안되는 문제 발생
+     * 1안 - 전역변수로 사용중인 객체를 초기화후 재생성한다(이러면 성능하락의 문제가 발생될듯) = 실패
+     * 2안 - 전역변수를 각각의 부위별로 추가하여 생성후 사용 LiveData만 한게 아니라 ArrayList를 추가해야함
+     * 3안 - xml재사용으로 인한 부작용 또는 viewHolder의 부작용... 이건 아닐듯
+     * */
     //다리 부위 운동 조회
-    fun getExerciseLower(): ArrayList<ExerciseData> {
-        if (exerciseLowerArray == null) {
-            var exerciseLowers: Call<ArrayList<ExerciseData>>? =
-                responseData.getExercisePartData("lower")
-            if (exerciseLowers != null) {
-                exerciseLowers.enqueue(object : Callback<ArrayList<ExerciseData>> {
-                    override fun onResponse(
-                        call: Call<ArrayList<ExerciseData>>,
-                        response: Response<ArrayList<ExerciseData>>
-                    ) {
-                        Log.d(TAG, "응답코드" + response.code())
-                        if (response.isSuccessful) {
-                            exerciseLowerArray = response.body()!!
-                        }
-                    }
-
-                    override fun onFailure(call: Call<ArrayList<ExerciseData>>, t: Throwable) {
-                        Log.d(TAG, "응답코드" + t.message)
-                    }
-
-                })
-            }
-            return exerciseLowerArray
-        }else{
-            return exerciseLowerArray
-        }
+    fun getExerciseLower(): MutableLiveData<ArrayList<ExerciseData>>? {
+        //둘다 null이거나 둘중에 하나가 null이거나
+//        if ((exercisePartArray == null && exerciseLivePartArray == null) || (exercisePartArray == null || exerciseLivePartArray == null)){
+//            exercisePartArray = ArrayList()
+//            exerciseLivePartArray = MutableLiveData()
+//            return exercisePartCallBack("lower")
+//        }else {
+//            return exercisePartCallBack("lower")
+//        }
+        //2안
+        exerciseLowerLiveArray=exercisePartCallBack("lower")
+        return exerciseLowerLiveArray
     }
 
     //전신 운동 조회
-    fun getExerciseBody(): ArrayList<ExerciseData> {
-        if (exerciseBodyArray == null) {
-            var exerciseBodies: Call<ArrayList<ExerciseData>>? =
-                responseData.getExercisePartData("body")
-            if (exerciseBodies != null) {
-                exerciseBodies.enqueue(object : Callback<ArrayList<ExerciseData>> {
-                    override fun onResponse(
-                        call: Call<ArrayList<ExerciseData>>,
-                        response: Response<ArrayList<ExerciseData>>
-                    ) {
-                        Log.d(TAG, "응답코드" + response.code())
-                        if (response.isSuccessful) {
-                            exerciseBodyArray = response.body()!!
-                        }
-                    }
-
-                    override fun onFailure(call: Call<ArrayList<ExerciseData>>, t: Throwable) {
-                        Log.d(TAG, "응답코드" + t.message)
-                    }
-
-                })
-            }
-            return exerciseBodyArray
-        }else{
-            return exerciseBodyArray
-        }
+    fun getExerciseBody(): MutableLiveData<ArrayList<ExerciseData>>? {
+//        if ((exercisePartArray == null && exerciseLivePartArray == null) || (exercisePartArray == null || exerciseLivePartArray == null)){
+//            exercisePartArray = ArrayList()
+//            exerciseLivePartArray = MutableLiveData()
+//            return exercisePartCallBack("body")
+//        }else {
+//            return exercisePartCallBack("body")
+//        }
+        exerciseBodyLiveArray=exercisePartCallBack("body")
+        return exerciseBodyLiveArray
     }
 
     //허리운동 조회
-    //if문 제거 이유 = 서버의 아이템이 변경될 때마다 해당 값을 다시 받아와야함
-    //              = 그 전에는 if문 덕분에 call객체가 있을 경우 불러오지 않게 했음으로 안됨
-   fun getExerciseLoins(): MutableLiveData<ArrayList<ExerciseData>> {
-            var exerciseLoins: Call<ArrayList<ExerciseData>>? =
-                responseData.getExercisePartData("loins")                   //loins부위에 대한 파라미터 정의 (where E_part = loins)
-                exerciseLoins!!.enqueue(object : Callback<ArrayList<ExerciseData>> {
-                    override fun onResponse(
-                        call: Call<ArrayList<ExerciseData>>,
-                        response: Response<ArrayList<ExerciseData>>
-                    ) {
-                        Log.d(TAG, "응답코드" + response.code())
-                        if (response.isSuccessful) {
-                            exerciseLoinsArray = response.body()!!
-                            exerciseLoinsLiveArray.value = exerciseLoinsArray
-                        }
-                    }
-
-                    override fun onFailure(call: Call<ArrayList<ExerciseData>>, t: Throwable) {
-                        Log.d(TAG, "응답코드" + t.message)
-                    }
-
-                })
-            return exerciseLoinsLiveArray
+    fun getExerciseLoins(): MutableLiveData<ArrayList<ExerciseData>>? {
+//        if ((exercisePartArray == null && exerciseLivePartArray == null) || (exercisePartArray == null || exerciseLivePartArray == null)){
+//            exercisePartArray = ArrayList()
+//            exerciseLivePartArray = MutableLiveData()
+//            return exercisePartCallBack("loins")
+//        }else {
+//            return exercisePartCallBack("loins")
+//        }
+        exerciseLoinsLiveArray=exercisePartCallBack("loins")
+        return exerciseLoinsLiveArray
     }
+
+    //객체 초기화
+    //LiveData를 공용으로 사용됨에 따라
+    //이 문제를 해결하기 위해 객체들을 초기화시킴
+//    fun dataReset(){
+//        exercisePartArray = null
+//        exerciseLivePartArray = null
+//    }
 }

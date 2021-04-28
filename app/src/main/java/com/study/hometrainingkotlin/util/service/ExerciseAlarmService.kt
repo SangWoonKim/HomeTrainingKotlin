@@ -13,6 +13,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.work.*
 import com.study.hometrainingkotlin.R
+import com.study.hometrainingkotlin.static.AlarmLog
 import com.study.hometrainingkotlin.util.appwidget.ExerciseWidget
 import com.study.hometrainingkotlin.util.intentfilter.ExerciseAlarmAction
 import com.study.hometrainingkotlin.util.notification.ExerciseAlarmNotification
@@ -47,6 +48,8 @@ class ExerciseAlarmService : Service() {
     //객체 상태 저장
     private var mediaPlayerState:Boolean=false
 
+    //사용자에게 알람이 호출되었는지의 상태 저장
+    private var clientCheck:AlarmLog ?= AlarmLog.getAlarmLog()
     /**
      * 바인더를 반환하기위한 내부클래스
      * */
@@ -88,22 +91,23 @@ class ExerciseAlarmService : Service() {
         //첫번 째 인자가 boolean으로 평가되는 표현식
         //값을 받아 true이면 실행
         // false면 AssertionError를 예외를 발생시키는 예약어
-        //근데 여기서 에러가 잡히네 이거...
         assert(getState != null)
         when(getState){
             "alarm_on" ->{
-                complete()
+                alarmOn()
+                //알람이 울린상태 저장
+                clientCheck!!.alarmState =true
+//                AlarmLog.getAlarmLog()!!.alarmState = true
             }
 
             "alarm_off" ->{
-                initialize()
+                alarmOff()
             }
             //default
             else ->{
                 defaultState()
             }
         }
-        //인텐트 남기기
         return START_STICKY
     }
 
@@ -186,14 +190,14 @@ class ExerciseAlarmService : Service() {
 
 
     //알람이 울리면 실행
-    private fun complete() {
+    private fun alarmOn() {
         mediaPlayer = MediaPlayer.create(this,R.raw.test)
         mediaPlayer!!.start()
         mediaPlayerState=true
 
     }
     //알람을 멈출때 사용
-    private fun initialize(){
+    private fun alarmOff(){
         if (mediaPlayerState) {
             mediaPlayer!!.stop()
             mediaPlayer!!.reset()
@@ -201,10 +205,15 @@ class ExerciseAlarmService : Service() {
             mediaPlayerState==false
         }
     }
+
+    private fun alarmComplete(){
+
+    }
+
     //초기 상태로 변환
     private fun defaultState() {
         if (mediaPlayerState) {
-            initialize()
+            alarmOff()
             mediaPlayer=null
         }
     }
@@ -225,6 +234,22 @@ class ExerciseAlarmService : Service() {
         //알림채널삭제
         notificationManager?.deleteNotificationChannel("1")
         executorService = null
+    }
+
+    //onDestroy를 호출하는 것이 아닌 서비스에서 사용되는 객체들을 초기화
+    //및 쓰레드 초기화 할 때 사용
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun closeTime(){
+        executorService?.shutdownNow()
+        //알림삭제
+        notificationManager?.cancelAll()
+        //알림채널삭제
+        notificationManager?.deleteNotificationChannel("1")
+        executorService = null
+        //다시 쓰레드 생성
+        executorService = Executors.newFixedThreadPool(1)
+        //시간 초기화
+        second =0
     }
 
     /**
@@ -259,17 +284,7 @@ class ExerciseAlarmService : Service() {
         alarmManager!!.cancel(pendingIntent)
         //ExerciseAlarmNotification에 "alarm_off"방송
         sendBroadcast(intentValue)
-//        stopSelf()
-        executorService?.shutdownNow()
-        //알림삭제
-        notificationManager?.cancelAll()
-        //알림채널삭제
-        notificationManager?.deleteNotificationChannel("1")
-        executorService = null
-        //다시 쓰레드 생성
-        executorService = Executors.newFixedThreadPool(1)
-        //시간 초기화
-        second =0
+        closeTime()
         Log.d("offTime()호출", "offTime")
     }
 
