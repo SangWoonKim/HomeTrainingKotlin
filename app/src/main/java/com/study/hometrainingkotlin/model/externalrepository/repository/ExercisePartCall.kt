@@ -10,6 +10,9 @@ import retrofit2.Callback
 import retrofit2.Response
 
 interface ExercisePartCall {
+    //최후의 방법 각부위별로 LiveData와 ArrayList를 생성후
+    //부위의 이름에 따라 if문으로 다른 객체들을 사용하게 하는 방법
+    //코드가 더러워질듯
     val requestServer:ExerciseInterface ?
     val TAG :String?
     var exercisePartArray:ArrayList<ExerciseData>?

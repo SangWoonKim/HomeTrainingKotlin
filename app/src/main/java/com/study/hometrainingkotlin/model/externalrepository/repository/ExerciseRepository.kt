@@ -92,8 +92,8 @@ class ExerciseRepository :ExercisePartCall {
     /**
      *데이터 재사용과 생명주기에 의한 빨리 클릭시 화면갱신이 안되는 문제 발생
      * 1안 - 전역변수로 사용중인 객체를 초기화후 재생성한다(이러면 성능하락의 문제가 발생될듯) = 실패
-     * 2안 - 전역변수를 각각의 부위별로 추가하여 생성후 사용 LiveData만 한게 아니라 ArrayList를 추가해야함
-     * 3안 - xml재사용으로 인한 부작용 또는 viewHolder의 부작용... 이건 아닐듯
+     * 2안 - 전역변수를 각각의 부위별로 추가하여 생성후 사용 LiveData만 한게 아니라 ArrayList를 추가해야함 = 실패
+     * 3안 - xml재사용으로 인한 부작용 또는 viewHolder의 부작용... 이건 아닐듯 = 확인결과 아님
      * */
     //다리 부위 운동 조회
     fun getExerciseLower(): MutableLiveData<ArrayList<ExerciseData>>? {
@@ -108,7 +108,37 @@ class ExerciseRepository :ExercisePartCall {
         //2안
         exerciseLowerLiveArray=exercisePartCallBack("lower")
         return exerciseLowerLiveArray
-    }
+//        if (exerciseLowerArray == null) {
+//            var exerciseLowers: Call<ArrayList<ExerciseData>>? =
+//                responseData.getExercisePartData("lower")               //upper부위에 대한 파라미터 정의 (where E_part = upper)
+//            //retrofit의 call 객체가 생성되어있을 경우
+//            if (exerciseLowers != null) {
+//                exerciseLowers.enqueue(object : Callback<ArrayList<ExerciseData>> {
+//                    override fun onResponse(
+//                        call: Call<ArrayList<ExerciseData>>,
+//                        response: Response<ArrayList<ExerciseData>>
+//                    ) {
+//                        Log.d(TAG1, "응답코드" + response.code())
+//                        //응답을 성공적으로 받았을 시 200번 신호 수신시
+//                        if (response.isSuccessful) {
+//                            //json데이터 exerciseUpperArray에 삽입
+//                            exerciseLowerArray = response.body()!!
+//                            //exerciseUpperArray의 데이터 exerciseUpperLiveArray에 삽입
+//                            exerciseLowerLiveArray?.value = exerciseLowerArray
+//                        }
+//                    }
+//
+//                    override fun onFailure(call: Call<ArrayList<ExerciseData>>, t: Throwable) {
+//                        Log.d(TAG1, "응답코드" + t.message)
+//                    }
+//
+//                })
+//            }
+//            return exerciseLowerLiveArray
+//        } else {
+//            return exerciseLowerLiveArray
+//        }
+//    }
 
     //전신 운동 조회
     fun getExerciseBody(): MutableLiveData<ArrayList<ExerciseData>>? {
@@ -121,6 +151,36 @@ class ExerciseRepository :ExercisePartCall {
 //        }
         exerciseBodyLiveArray=exercisePartCallBack("body")
         return exerciseBodyLiveArray
+//        if (exerciseBodyArray == null) {
+//            var exerciseBody: Call<ArrayList<ExerciseData>>? =
+//                responseData.getExercisePartData("body")               //upper부위에 대한 파라미터 정의 (where E_part = upper)
+//            //retrofit의 call 객체가 생성되어있을 경우
+//            if (exerciseBody != null) {
+//                exerciseBody.enqueue(object : Callback<ArrayList<ExerciseData>> {
+//                    override fun onResponse(
+//                        call: Call<ArrayList<ExerciseData>>,
+//                        response: Response<ArrayList<ExerciseData>>
+//                    ) {
+//                        Log.d(TAG1, "응답코드" + response.code())
+//                        //응답을 성공적으로 받았을 시 200번 신호 수신시
+//                        if (response.isSuccessful) {
+//                            //json데이터 exerciseUpperArray에 삽입
+//                            exerciseBodyArray = response.body()!!
+//                            //exerciseUpperArray의 데이터 exerciseUpperLiveArray에 삽입
+//                            exerciseBodyLiveArray?.value = exerciseBodyArray
+//                        }
+//                    }
+//
+//                    override fun onFailure(call: Call<ArrayList<ExerciseData>>, t: Throwable) {
+//                        Log.d(TAG1, "응답코드" + t.message)
+//                    }
+//
+//                })
+//            }
+//            return exerciseBodyLiveArray
+//        } else {
+//            return exerciseBodyLiveArray
+//        }
     }
 
     //허리운동 조회
@@ -134,6 +194,36 @@ class ExerciseRepository :ExercisePartCall {
 //        }
         exerciseLoinsLiveArray=exercisePartCallBack("loins")
         return exerciseLoinsLiveArray
+//        if (exerciseLoinsArray == null) {
+//            var exerciseLoins: Call<ArrayList<ExerciseData>>? =
+//                responseData.getExercisePartData("loins")               //upper부위에 대한 파라미터 정의 (where E_part = upper)
+//            //retrofit의 call 객체가 생성되어있을 경우
+//            if (exerciseLoins != null) {
+//                exerciseLoins.enqueue(object : Callback<ArrayList<ExerciseData>> {
+//                    override fun onResponse(
+//                        call: Call<ArrayList<ExerciseData>>,
+//                        response: Response<ArrayList<ExerciseData>>
+//                    ) {
+//                        Log.d(TAG1, "응답코드" + response.code())
+//                        //응답을 성공적으로 받았을 시 200번 신호 수신시
+//                        if (response.isSuccessful) {
+//                            //json데이터 exerciseUpperArray에 삽입
+//                            exerciseLoinsArray = response.body()!!
+//                            //exerciseUpperArray의 데이터 exerciseUpperLiveArray에 삽입
+//                            exerciseLoinsLiveArray?.value = exerciseLoinsArray
+//                        }
+//                    }
+//
+//                    override fun onFailure(call: Call<ArrayList<ExerciseData>>, t: Throwable) {
+//                        Log.d(TAG1, "응답코드" + t.message)
+//                    }
+//
+//                })
+//            }
+//            return exerciseLoinsLiveArray
+//        } else {
+//            return exerciseLoinsLiveArray
+//        }
     }
 
     //객체 초기화
