@@ -7,6 +7,13 @@ import com.study.hometrainingkotlin.model.externalrepository.vo.ExerciseData
 import com.study.hometrainingkotlin.model.localrepository.room.AppDatabase
 import com.study.hometrainingkotlin.model.localrepository.room.dao.ExerciseDAO
 import com.study.hometrainingkotlin.model.localrepository.room.dao.ExerciseListEntity
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.single
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class ExerciseListRepository(application: Application) {
 
@@ -17,6 +24,7 @@ class ExerciseListRepository(application: Application) {
     private val exerciseDAO : ExerciseDAO =
             dbInstance!!.exerciseDAO()
 
+//    private var sumCal:Int =0
 
     //운동목록 table 조회(Read, select)
     fun selectList(): LiveData<List<ExerciseListEntity>> {
@@ -40,6 +48,23 @@ class ExerciseListRepository(application: Application) {
         AppDatabase.writeExecutor.execute(Runnable {
             exerciseDAO.exerciseListDelete(exerciseListEntity)
         })
+    }
+
+    //운동목록이 참조하는 table의 데이터 전체 삭제(Delete,delete)
+    fun deleteAllListItem(){
+        AppDatabase.writeExecutor.execute(Runnable {
+            exerciseDAO.exerciseAllListDelete()
+        })
+    }
+
+    //운동목록에 있는 아이템들의 칼로리를 조회하여 총값 계산
+    fun sumCalListItem():LiveData<Int>{
+//        runBlocking {         //{}안의 로직이 수행되기 전까지 빠져나가지 못함
+//            GlobalScope.launch {                  //IO쓰레드에서 실행
+//                sumCal = exerciseDAO.exerciseListCalSum()
+//            }
+//        }
+           return exerciseDAO.exerciseListCalSum()
     }
 
 

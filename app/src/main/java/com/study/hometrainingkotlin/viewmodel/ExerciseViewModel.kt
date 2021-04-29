@@ -11,6 +11,7 @@ import com.study.hometrainingkotlin.model.localrepository.room.AppDatabase
 import com.study.hometrainingkotlin.model.localrepository.room.dao.ExerciseDAO
 import com.study.hometrainingkotlin.model.localrepository.room.dao.ExerciseListEntity
 import com.study.hometrainingkotlin.model.localrepository.room.repository.ExerciseListRepository
+import kotlinx.coroutines.flow.Flow
 
 //뷰모델 (굳이 쓸 필요가 없으나 이번기회에 사용해봄)
 //데이터를 조회하는 것 밖에 안하기 때문에 서버에서 값이 달라지지 않는 한 바뀌지 않음
@@ -61,6 +62,16 @@ class ExerciseViewModel(application: Application): AndroidViewModel(application)
     // 운동목록 item 삭제메소드
     fun deleteListItem(exerciseListEntity: ExerciseListEntity){
         return exerciseListRepository.deleteListItem(exerciseListEntity)
+    }
+
+    // 운동목록 item 전체 삭제메소드
+    fun deleteAllListItem(){
+        return exerciseListRepository.deleteAllListItem()
+    }
+
+    //운동목록에 있는 item들의 총 칼로리소모량을 출력하는 메소드
+    fun sumCalListItem():LiveData<Int>{
+        return exerciseListRepository.sumCalListItem()
     }
 
 

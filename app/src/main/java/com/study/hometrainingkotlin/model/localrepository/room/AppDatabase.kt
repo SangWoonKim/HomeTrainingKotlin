@@ -24,7 +24,7 @@ abstract class AppDatabase : RoomDatabase() {
     //singleton(하나의 데이터베이스를 여러인스턴스가 동시에 접근하는 것을 방지하기 위함)
     companion object{
         //https://developer.android.com/codelabs/android-room-with-a-view#7
-        // 쓰기를 위한 Executor 백그라운드 작업에 필요한 객체
+        // 쓰기를 위한 Executor 백그라운드 작업에 필요한 쓰레드객체
         val writeExecutor : ExecutorService = Executors.newFixedThreadPool(4)
         private var INSTANCE: AppDatabase? = null
 
