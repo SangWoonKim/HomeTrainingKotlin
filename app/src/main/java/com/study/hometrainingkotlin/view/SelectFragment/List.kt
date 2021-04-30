@@ -1,30 +1,29 @@
 package com.study.hometrainingkotlin.view.SelectFragment
 
-import android.content.DialogInterface
+
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.study.hometrainingkotlin.R
 import com.study.hometrainingkotlin.model.localrepository.room.dao.ExerciseListEntity
-import com.study.hometrainingkotlin.view.SelectFragment.dialog.ListCalSumDialog
+import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseMyselfEntity
 import com.study.hometrainingkotlin.view.adapter.ExerciseListAdapter
-import com.study.hometrainingkotlin.view.adapter.ItemTouchCallback
 import com.study.hometrainingkotlin.viewmodel.ExerciseViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.runBlocking
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
+
 
 class List : Fragment(), View.OnClickListener {
     //view 객체 정의
@@ -35,10 +34,14 @@ class List : Fragment(), View.OnClickListener {
 
     //data또는 뷰모델 정의
     private var exerciseListArray: ArrayList<ExerciseListEntity>? = null
-
-    //    private val exerciseViewModel : ExerciseViewModel by viewModels()
     private val exerciseViewModel: ExerciseViewModel by activityViewModels()
+
+    //운동목록에 사용되는 adapter
     private var exerciseListAdapter: ExerciseListAdapter? = null
+
+    //다이얼로그에 사용되는 변수및 빌더
+    private var dialogBuilder: AlertDialog.Builder ?= null
+    private var cal:Int?=null
 
     //아이템 스와이프를 위한 객체
     var swipeCallback = object : ItemTouchHelper.SimpleCallback(
@@ -60,16 +63,16 @@ class List : Fragment(), View.OnClickListener {
             exerciseListArray!!.removeAt(position)    //선택한 아이템을 배열에서 삭제
             exerciseListAdapter!!.notifyDataSetChanged() // 갱신
         }
-
-
     }
 
-
+/**
+ * 안드로이드 생명주기 공간
+ * */
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+): View? {
         return inflater.inflate(R.layout.fragment_list, container, false)
     }
 
@@ -90,15 +93,29 @@ class List : Fragment(), View.OnClickListener {
     //LiveData를 갱신받으려면 onActivityCreated에서 호출해야함
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        //운동목록에 사용됨
         exerciseViewModel.selectListItem().observe(viewLifecycleOwner, Observer { changeData ->
             //값이 변하는 것을 확인함
             exerciseListArray = changeData as ArrayList<ExerciseListEntity>
             Log.d("changeData", changeData.toString())
             setAdapter()
         })
+        //칼로리 계산에서 사용됨
+        exerciseViewModel.sumCalListItem().observe(viewLifecycleOwner, { changeData ->
+            if (changeData ==null){
+                cal=0
+            }else {
+                cal = changeData
+                Log.d("changeDataCal", changeData.toString())
+            }
+        })
     }
 
-    //어뎁터 연결 및 갱신시 사용되는 메소드
+    /**
+     * 어뎁터 연결 및 갱신시 사용되는 메소드
+     * 다이얼로그 생성시 사용되는 메소드
+     * 클릭시 사용되는 메소드
+     * */
     private fun setAdapter() {
         //어뎁터 첫 생성시
         if (exerciseListAdapter == null) {
@@ -124,14 +141,45 @@ class List : Fragment(), View.OnClickListener {
     }
 
 
-//    private fun calNullCheck(): Int {
-////        var test:Int
-////        runBlocking {
-////            test = exerciseViewModel.sumCalListItem()
-////        }
-////        return test
-//
-//    }
+    //다이얼로그 생성
+    private fun buildDialog(){
+        dialogBuilder = context?.let { AlertDialog.Builder(it) }
+
+        dialogBuilder?.setMessage(cal.toString())
+            ?.setTitle("칼로리 계산")
+            ?.setPositiveButton(
+                "추가"
+            ) { dialog, which ->
+                if (exerciseListArray?.size!=0) {
+                    //운동목록의 아이템들을 exerciseMyself테이블에 삽입
+                    exerciseViewModel.insertMyself(insertMyselfData())
+                }else{
+                    Toast.makeText(activity,"",Toast.LENGTH_LONG).show()
+                }
+            }
+            ?.setNeutralButton(
+                "초기화"
+            ) { dialog, which -> exerciseViewModel.deleteAllListItem() }
+            ?.create()?.show()
+    }
+
+    //exercisemyself테이블에 운동목록에 있는 데이터 삽입 메소드
+    //db수정과 나자신과의 싸움에서 join을 이용해야함
+    private fun insertMyselfData():ArrayList<ExerciseMyselfEntity>{
+        var insertData:ArrayList<ExerciseMyselfEntity> =ArrayList()
+        var dateFormat = SimpleDateFormat("yy-MM-dd")
+        var date = Date()
+        var currentDate = dateFormat.format(date)
+        for (i in 0..exerciseListArray!!.size!!-1) {
+            insertData.add(ExerciseMyselfEntity(currentDate,
+                exerciseListArray!!.get(i).part,
+                exerciseListArray!!.get(i).name,
+                exerciseListArray!!.get(i).cal)
+            )
+        }
+        return insertData
+    }
+
 
     override fun onClick(v: View?) {
         when (v!!.id) {
@@ -142,19 +190,7 @@ class List : Fragment(), View.OnClickListener {
 
             //계산 및 초기화 버튼(칼로리 계산)
             R.id.BTN_List_accept -> {
-                val dialog = ListCalSumDialog()
-                fragmentManager?.let { dialog.show(it,"dialog") }
-//                val dialogBuilder = context?.let { AlertDialog.Builder(it) }
-//
-//                dialogBuilder?.setMessage(calNullCheck().toString())
-//                    ?.setTitle("칼로리 계산")
-//                    ?.setPositiveButton(
-//                        "초기화"
-//                    ) { dialog, which -> exerciseViewModel.deleteAllListItem() }
-//                    ?.setNeutralButton(
-//                        "취소"
-//                    ) { dialog, which -> }
-//                    ?.create()?.show()
+                buildDialog()
             }
 
             //운동실행 버튼 (애니메이션 실행)

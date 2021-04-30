@@ -8,6 +8,7 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.study.hometrainingkotlin.model.localrepository.room.dao.ExerciseDAO
 import com.study.hometrainingkotlin.model.localrepository.room.dao.ExerciseListEntity
+import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseMyselfEntity
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -15,7 +16,7 @@ import java.util.concurrent.Executors
 //https://developer.android.com/training/data-storage/room/prepopulate?hl=ko#from-file
 //데이터베이스 정의 클래스
 //외부(assets)에서 db파일 복사시 version =2로 사용
-@Database(entities = [ExerciseListEntity::class],version = 2,exportSchema = false)
+@Database(entities = [ExerciseListEntity::class, ExerciseMyselfEntity::class] ,version = 2,exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     //쿼리가 담긴 클래스
@@ -46,7 +47,9 @@ abstract class AppDatabase : RoomDatabase() {
         @JvmField
         val MIGRATION:Migration = object : Migration(1,2){
             override fun migrate(database: SupportSQLiteDatabase) {
+                //처음 마이그레이션할 때 즉 칼럼이나 테이블이 변경이 안되었을 경우 빈칸으로 놓음
 
+//                database.execSQL("CREATE TABLE exercisemyself (My_date TEXT, My_part TEXT, My_name TEXT, My_cal INTEGER, PRIMARY KEY(My_date))")
             }
 
         }

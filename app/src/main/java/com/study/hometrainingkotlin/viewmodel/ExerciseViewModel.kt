@@ -4,14 +4,12 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.study.hometrainingkotlin.model.externalrepository.repository.ExerciseRepository
 import com.study.hometrainingkotlin.model.externalrepository.vo.ExerciseData
-import com.study.hometrainingkotlin.model.localrepository.room.AppDatabase
-import com.study.hometrainingkotlin.model.localrepository.room.dao.ExerciseDAO
 import com.study.hometrainingkotlin.model.localrepository.room.dao.ExerciseListEntity
 import com.study.hometrainingkotlin.model.localrepository.room.repository.ExerciseListRepository
-import kotlinx.coroutines.flow.Flow
+import com.study.hometrainingkotlin.model.localrepository.room.repository.ExerciseMyselfRepository
+import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseMyselfEntity
 
 //뷰모델 (굳이 쓸 필요가 없으나 이번기회에 사용해봄)
 //데이터를 조회하는 것 밖에 안하기 때문에 서버에서 값이 달라지지 않는 한 바뀌지 않음
@@ -24,32 +22,35 @@ class ExerciseViewModel(application: Application): AndroidViewModel(application)
     private val exerciseListRepository: ExerciseListRepository by lazy {
         ExerciseListRepository(application)
     }
+    private val exerciseMyselfRepository:ExerciseMyselfRepository by lazy {
+        ExerciseMyselfRepository(application)
+    }
 
-    //운동선택 상체 부위 배열데이터를 반환
+    /**
+     * 운동선택에서 사용되는 메소드
+     * */
+    //Upper
     fun getUppers() : MutableLiveData<ArrayList<ExerciseData>> {
         return exerciseRepository.getExerciseUpper()
     }
-
+    //Lower
     fun getLowers(): MutableLiveData<ArrayList<ExerciseData>>? {
         return exerciseRepository.getExerciseLower()
     }
-
+    //Body
     fun getBodies(): MutableLiveData<ArrayList<ExerciseData>>? {
         return exerciseRepository.getExerciseBody()
     }
-
+    //Loins
     fun getLoins() : MutableLiveData<ArrayList<ExerciseData>>? {
         return exerciseRepository.getExerciseLoins()
     }
 
-    //exerciseReposititory의 LiveData를 공용으로 사용하게 됨으로 써
-    //아이템이 재사용됨 즉 서버에서 값을 받기 전까지 같은 아이템이 출력됨으로
-    //객체를 reset시켜야해서 사용됨
-//    fun exerciseResetGetData(){
-//        return exerciseRepository.dataReset()
-//    }
 
-    //운동목록 조회 메소드
+    /**
+     * 운동목록에서 사용되는 메소드
+     * */
+    //운동목록 item조회메소드
     fun selectListItem(): LiveData<List<ExerciseListEntity>> {
         return exerciseListRepository.selectList()
     }
@@ -74,6 +75,10 @@ class ExerciseViewModel(application: Application): AndroidViewModel(application)
         return exerciseListRepository.sumCalListItem()
     }
 
+    //운동목록에 있는 item리스트들의 정보 일부를 exerciseMyself에 삽입하는 메소드
+    fun insertMyself(exerciseMyselfEntity: ArrayList<ExerciseMyselfEntity>){
+        return exerciseMyselfRepository.listInsert(exerciseMyselfEntity)
+    }
 
 }
 

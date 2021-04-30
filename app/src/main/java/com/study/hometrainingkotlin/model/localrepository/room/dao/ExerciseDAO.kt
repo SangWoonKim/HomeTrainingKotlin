@@ -6,17 +6,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 
 import androidx.sqlite.db.SupportSQLiteQuery
+import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseMyselfEntity
 import kotlinx.coroutines.flow.Flow
 
 //쿼리문 명세 클래스
 //실제로 db에 접근하는 용도
 @Dao
 interface ExerciseDAO {
-    //운동추가버튼 누를때 사용
+    //운동선택에서 추가버튼 누를때 사용
     //onConflict insert시 옵션 설정 REPLACE == INSERT OR REPLACE INTO
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertExerciseList(vararg exerciseListEntity: ExerciseListEntity)
-
 
     //운동목록 조회시 사용
     @Query("SELECT * FROM exerciseresult ")
@@ -31,9 +31,10 @@ interface ExerciseDAO {
     fun exerciseAllListDelete()
 
     //운동목록에 있는 아이템들의 칼로리값을 모두 더한 후 조회
-//    @Query("SELECT sum(cal) from exerciseresult")
-//    suspend fun exerciseListCalSum():Int
-
     @Query("SELECT sum(cal) from exerciseresult")
     fun exerciseListCalSum():LiveData<Int>
+
+    //운동목록의 다이얼로그 버튼에서 추가버튼 클릭시 사용
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertExerciseMyselfList(exerciseMyselfEntity: List<ExerciseMyselfEntity>)
 }
