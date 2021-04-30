@@ -14,6 +14,7 @@ class ExerciseMyselfRepository(application: Application) {
     private val exerciseDAO: ExerciseDAO =
         dbInstance!!.exerciseDAO()
 
+    //exercisemyself테이블에 아이템 삽입 메소드
     fun listInsert(exerciseMyselfEntity: ArrayList<ExerciseMyselfEntity>){
         AppDatabase.writeExecutor.execute{
             exerciseDAO.insertExerciseMyselfList(exerciseMyselfEntity)

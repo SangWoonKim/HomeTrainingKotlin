@@ -12,6 +12,7 @@ import java.io.InputStream
 
 
 //db복사 파일 앱실행과 동시 실행
+//Login클래스에서 호출되는 클래스
 object DataBaseCopy {
     private val TAG = DataBaseCopy::class.java.simpleName
     private const val DB_NAME ="HomeTrainingKotlin.db"
