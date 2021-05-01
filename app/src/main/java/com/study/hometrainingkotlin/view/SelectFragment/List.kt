@@ -1,6 +1,7 @@
 package com.study.hometrainingkotlin.view.SelectFragment
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,6 +19,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.study.hometrainingkotlin.R
 import com.study.hometrainingkotlin.model.localrepository.room.dao.ExerciseListEntity
 import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseMyselfEntity
+import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseSumCalEntity
+import com.study.hometrainingkotlin.view.ExerciseList.MyselfFight
 import com.study.hometrainingkotlin.view.adapter.ExerciseListAdapter
 import com.study.hometrainingkotlin.viewmodel.ExerciseViewModel
 import java.text.SimpleDateFormat
@@ -42,7 +45,7 @@ class List : Fragment(), View.OnClickListener {
     //다이얼로그에 사용되는 변수및 빌더
     private var dialogBuilder: AlertDialog.Builder ?= null
     private var cal:Int?=null
-
+    private var currentDate :String ?=null
     //아이템 스와이프를 위한 객체
     var swipeCallback = object : ItemTouchHelper.SimpleCallback(
         0,
@@ -153,6 +156,9 @@ class List : Fragment(), View.OnClickListener {
                 if (exerciseListArray?.size!=0) {
                     //운동목록의 아이템들을 exerciseMyself테이블에 삽입
                     exerciseViewModel.insertMyself(insertMyselfData())
+                    //운동목록의 아이템들의 칼로리 총합과 날짜 삽입
+                    exerciseViewModel.insertSumCal(ExerciseSumCalEntity(cal,
+                    currentDate))
                 }else{
                     Toast.makeText(activity,"",Toast.LENGTH_LONG).show()
                 }
@@ -164,12 +170,11 @@ class List : Fragment(), View.OnClickListener {
     }
 
     //exercisemyself테이블에 운동목록에 있는 데이터 삽입 메소드
-    //db수정과 나자신과의 싸움에서 join을 이용해야함
     private fun insertMyselfData():ArrayList<ExerciseMyselfEntity>{
         var insertData:ArrayList<ExerciseMyselfEntity> =ArrayList()
-        var dateFormat = SimpleDateFormat("yy-MM-dd")
+        var dateFormat = SimpleDateFormat("yyMMdd")
         var date = Date()
-        var currentDate = dateFormat.format(date)
+        currentDate = dateFormat.format(date)
         for (i in 0..exerciseListArray!!.size!!-1) {
             insertData.add(ExerciseMyselfEntity(currentDate,
                 exerciseListArray!!.get(i).part,
@@ -185,7 +190,8 @@ class List : Fragment(), View.OnClickListener {
         when (v!!.id) {
             //나 자신과의 싸움 버튼(그래프)
             R.id.BTN_List_fight -> {
-
+                val myselfActivity =Intent(activity,MyselfFight::class.java)
+                startActivity(myselfActivity)
             }
 
             //계산 및 초기화 버튼(칼로리 계산)

@@ -7,6 +7,7 @@ import androidx.room.*
 
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseMyselfEntity
+import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseSumCalEntity
 import kotlinx.coroutines.flow.Flow
 
 //쿼리문 명세 클래스
@@ -31,10 +32,22 @@ interface ExerciseDAO {
     fun exerciseAllListDelete()
 
     //운동목록에 있는 아이템들의 칼로리값을 모두 더한 후 조회
-    @Query("SELECT sum(cal) from exerciseresult")
+    @Query("SELECT sum(cal) FROM exerciseresult")
     fun exerciseListCalSum():LiveData<Int>
 
     //운동목록의 다이얼로그 버튼에서 추가버튼 클릭시 사용
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertExerciseMyselfList(exerciseMyselfEntity: List<ExerciseMyselfEntity>)
+
+    //exerciseSumCal테이블을 조회할 때 사용
+    @Query("SELECT * FROM exercisesumcal")
+    fun exerciseSumCalSelect():LiveData<List<ExerciseSumCalEntity>>
+
+    //나자신과의 싸움에서 BarChart 클릭시 사용
+    @Query("SELECT * FROM exercisemyself WHERE My_date= :date")
+    fun exerciseMyselfDetailSelect(date:String):LiveData<List<ExerciseMyselfEntity>>
+
+    //운동목록에서 나자신과의 싸움 추가버튼 클릭시 사용
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertExerciseSumCal(vararg exerciseSumCalEntity: ExerciseSumCalEntity)
 }

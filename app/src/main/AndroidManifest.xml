@@ -4,8 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
-
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".util.application.ServiceApplication"
@@ -17,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HomeTrainingKotlin"
         android:usesCleartextTraffic="true">
-        <activity android:name=".view.alarm.Alarm"></activity>
+        <activity android:name=".view.ExerciseList.MyselfFight"></activity>
+        <activity android:name=".view.alarm.Alarm" />
         <activity android:name=".view.exercise.Loins" />
         <activity android:name=".view.exercise.Body" />
         <activity
@@ -33,24 +33,24 @@
         <activity android:name=".view.Login.Login" />
         <activity android:name=".view.Register.Register" />
         <activity android:name=".BottomNaviView" />
-        <activity android:name=".view.exercise.AbstractBasicActivity"/>
-        <activity android:name=".view.exercise.Lower"/>
-        <activity android:name=".view.exercise.Upper"/>
+        <activity android:name=".view.exercise.AbstractBasicActivity" />
+        <activity android:name=".view.exercise.Lower" />
+        <activity android:name=".view.exercise.Upper" />
 
         <service
             android:name=".util.service.ExerciseAlarmService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.study.hometrainingkotlin.util.intentfilter.ExerciseAlarmAction.ALARM_ON"/>
-                <action android:name="com.study.hometrainingkotlin.util.intentfilter.ExerciseAlarmAction.ALARM_OFF"/>
+                <action android:name="com.study.hometrainingkotlin.util.intentfilter.ExerciseAlarmAction.ALARM_ON" />
+                <action android:name="com.study.hometrainingkotlin.util.intentfilter.ExerciseAlarmAction.ALARM_OFF" />
             </intent-filter>
         </service>
-        <receiver android:name=".util.notification.ExerciseAlarmNotification"
-            android:enabled="true"
-            android:exported="true">
-        </receiver>
 
+        <receiver
+            android:name=".util.notification.ExerciseAlarmNotification"
+            android:enabled="true"
+            android:exported="true"></receiver>
     </application>
 
 </manifest>

@@ -9,7 +9,9 @@ import com.study.hometrainingkotlin.model.externalrepository.vo.ExerciseData
 import com.study.hometrainingkotlin.model.localrepository.room.dao.ExerciseListEntity
 import com.study.hometrainingkotlin.model.localrepository.room.repository.ExerciseListRepository
 import com.study.hometrainingkotlin.model.localrepository.room.repository.ExerciseMyselfRepository
+import com.study.hometrainingkotlin.model.localrepository.room.repository.ExerciseSumCalRepository
 import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseMyselfEntity
+import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseSumCalEntity
 
 //뷰모델 (굳이 쓸 필요가 없으나 이번기회에 사용해봄)
 //데이터를 조회하는 것 밖에 안하기 때문에 서버에서 값이 달라지지 않는 한 바뀌지 않음
@@ -24,6 +26,9 @@ class ExerciseViewModel(application: Application): AndroidViewModel(application)
     }
     private val exerciseMyselfRepository:ExerciseMyselfRepository by lazy {
         ExerciseMyselfRepository(application)
+    }
+    private val exerciseSumCalRepository:ExerciseSumCalRepository by lazy {
+        ExerciseSumCalRepository(application)
     }
 
     /**
@@ -79,6 +84,25 @@ class ExerciseViewModel(application: Application): AndroidViewModel(application)
     fun insertMyself(exerciseMyselfEntity: ArrayList<ExerciseMyselfEntity>){
         return exerciseMyselfRepository.listInsert(exerciseMyselfEntity)
     }
+    //운동목록에 있는 item들의 총칼로리 값과 오늘의 날짜를 exercisesumcal테이블에 삽입하는 메소드
+    fun insertSumCal(exerciseSumCalEntity:ExerciseSumCalEntity) {
+        return exerciseSumCalRepository.sumCalInsert(exerciseSumCalEntity)
+    }
+
+
+    /**
+     * 나 자신과의 싸움에서 사용되는 메소드
+     * */
+    //나자신과의 싸움에서 join하여 출력되는 메소드
+    fun getSumCal():LiveData<List<ExerciseSumCalEntity>>{
+        return exerciseListRepository.selectSumCal()
+    }
+
+    //나 자신과의 싸움에서 Bar클릭시 호출되는 메소드
+    fun getMyselfDetail(date:String):LiveData<List<ExerciseMyselfEntity>>{
+        return exerciseListRepository.selectMyselfDetail(date)
+    }
+
 
 }
 

@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import com.study.hometrainingkotlin.model.localrepository.room.AppDatabase
 import com.study.hometrainingkotlin.model.localrepository.room.dao.ExerciseDAO
 import com.study.hometrainingkotlin.model.localrepository.room.dao.ExerciseListEntity
+import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseMyselfEntity
+import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseSumCalEntity
 
 class ExerciseListRepository(application: Application) {
 
@@ -51,4 +53,12 @@ class ExerciseListRepository(application: Application) {
         return exerciseDAO.exerciseListCalSum()
     }
 
+    //나 자신과의 싸움에서 barChart에 표시할 때 사용되는 메소드
+    fun selectSumCal(): LiveData<List<ExerciseSumCalEntity>> {
+        return exerciseDAO.exerciseSumCalSelect()
+    }
+
+    fun selectMyselfDetail(date:String): LiveData<List<ExerciseMyselfEntity>> {
+        return exerciseDAO.exerciseMyselfDetailSelect(date)
+    }
 }

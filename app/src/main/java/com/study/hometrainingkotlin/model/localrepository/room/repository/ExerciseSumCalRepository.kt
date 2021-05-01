@@ -3,11 +3,9 @@ package com.study.hometrainingkotlin.model.localrepository.room.repository
 import android.app.Application
 import com.study.hometrainingkotlin.model.localrepository.room.AppDatabase
 import com.study.hometrainingkotlin.model.localrepository.room.dao.ExerciseDAO
-import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseMyselfEntity
 import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseSumCalEntity
 
-class ExerciseMyselfRepository(application: Application) {
-    //room의 인스턴스 얻어와 저장
+class ExerciseSumCalRepository(application: Application) {
     private val dbInstance = AppDatabase.getInstance(application)
 
     //인스턴스를 이용하여 늦은 초기화 실행
@@ -15,12 +13,10 @@ class ExerciseMyselfRepository(application: Application) {
     private val exerciseDAO: ExerciseDAO =
         dbInstance!!.exerciseDAO()
 
-    //exercisemyself테이블에 아이템 삽입 메소드
-    fun listInsert(exerciseMyselfEntity: ArrayList<ExerciseMyselfEntity>){
-        AppDatabase.writeExecutor.execute{
-            exerciseDAO.insertExerciseMyselfList(exerciseMyselfEntity)
+    //다른 스레드를 이용하여 삽입실행
+    fun sumCalInsert(exerciseSumCalEntity: ExerciseSumCalEntity) {
+        AppDatabase.writeExecutor.execute {
+            exerciseDAO.insertExerciseSumCal(exerciseSumCalEntity)
         }
     }
-
-
 }

@@ -9,6 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.study.hometrainingkotlin.model.localrepository.room.dao.ExerciseDAO
 import com.study.hometrainingkotlin.model.localrepository.room.dao.ExerciseListEntity
 import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseMyselfEntity
+import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseSumCalEntity
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -16,7 +17,7 @@ import java.util.concurrent.Executors
 //https://developer.android.com/training/data-storage/room/prepopulate?hl=ko#from-file
 //데이터베이스 정의 클래스
 //외부(assets)에서 db파일 복사시 version =2로 사용
-@Database(entities = [ExerciseListEntity::class, ExerciseMyselfEntity::class] ,version = 2,exportSchema = false)
+@Database(entities = [ExerciseListEntity::class, ExerciseMyselfEntity::class, ExerciseSumCalEntity::class] ,version = 2,exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     //쿼리가 담긴 클래스
