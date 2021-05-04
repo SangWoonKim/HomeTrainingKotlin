@@ -77,7 +77,7 @@ class ExerciseViewModel(application: Application): AndroidViewModel(application)
 
     //운동목록에 있는 item들의 총 칼로리소모량을 출력하는 메소드
     fun sumCalListItem():LiveData<Int>{
-        return exerciseListRepository.sumCalListItem()
+        return exerciseSumCalRepository.sumCalListItem()
     }
 
     //운동목록에 있는 item리스트들의 정보 일부를 exerciseMyself에 삽입하는 메소드
@@ -95,12 +95,12 @@ class ExerciseViewModel(application: Application): AndroidViewModel(application)
      * */
     //나자신과의 싸움에서 join하여 출력되는 메소드
     fun getSumCal():LiveData<List<ExerciseSumCalEntity>>{
-        return exerciseListRepository.selectSumCal()
+        return exerciseSumCalRepository.selectSumCal()
     }
 
     //나 자신과의 싸움에서 Bar클릭시 호출되는 메소드
-    fun getMyselfDetail(date:String):LiveData<List<ExerciseMyselfEntity>>{
-        return exerciseListRepository.selectMyselfDetail(date)
+    fun getMyselfDetail():LiveData<List<ExerciseMyselfEntity>>{
+        return exerciseMyselfRepository.selectMyselfDetail()
     }
 
 

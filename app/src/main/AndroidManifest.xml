@@ -16,10 +16,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HomeTrainingKotlin"
         android:usesCleartextTraffic="true">
-        <activity android:name=".view.ExerciseList.MyselfFight"></activity>
-        <activity android:name=".view.alarm.Alarm" />
-        <activity android:name=".view.exercise.Loins" />
-        <activity android:name=".view.exercise.Body" />
         <activity
             android:name=".view.Splash.initSplashView"
             android:screenOrientation="fullSensor"
@@ -30,6 +26,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".view.ExerciseList.MyselfFight"></activity>
+        <activity android:name=".view.alarm.Alarm" />
+        <activity android:name=".view.exercise.Loins" />
+        <activity android:name=".view.exercise.Body" />
         <activity android:name=".view.Login.Login" />
         <activity android:name=".view.Register.Register" />
         <activity android:name=".BottomNaviView" />

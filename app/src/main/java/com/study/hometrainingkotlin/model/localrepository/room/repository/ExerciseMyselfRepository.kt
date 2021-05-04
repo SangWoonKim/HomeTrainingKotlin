@@ -1,6 +1,7 @@
 package com.study.hometrainingkotlin.model.localrepository.room.repository
 
 import android.app.Application
+import androidx.lifecycle.LiveData
 import com.study.hometrainingkotlin.model.localrepository.room.AppDatabase
 import com.study.hometrainingkotlin.model.localrepository.room.dao.ExerciseDAO
 import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseMyselfEntity
@@ -22,5 +23,8 @@ class ExerciseMyselfRepository(application: Application) {
         }
     }
 
+    fun selectMyselfDetail(): LiveData<List<ExerciseMyselfEntity>> {
+        return exerciseDAO.exerciseMyselfDetailSelect()
+    }
 
 }

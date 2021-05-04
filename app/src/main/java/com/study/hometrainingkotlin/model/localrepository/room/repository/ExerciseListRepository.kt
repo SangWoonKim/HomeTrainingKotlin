@@ -47,18 +47,4 @@ class ExerciseListRepository(application: Application) {
             exerciseDAO.exerciseAllListDelete()
         })
     }
-
-    //운동목록에 있는 아이템들의 칼로리를 조회하여 총값 계산
-    fun sumCalListItem(): LiveData<Int> {
-        return exerciseDAO.exerciseListCalSum()
-    }
-
-    //나 자신과의 싸움에서 barChart에 표시할 때 사용되는 메소드
-    fun selectSumCal(): LiveData<List<ExerciseSumCalEntity>> {
-        return exerciseDAO.exerciseSumCalSelect()
-    }
-
-    fun selectMyselfDetail(date:String): LiveData<List<ExerciseMyselfEntity>> {
-        return exerciseDAO.exerciseMyselfDetailSelect(date)
-    }
 }

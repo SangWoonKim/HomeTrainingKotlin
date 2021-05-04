@@ -44,8 +44,8 @@ interface ExerciseDAO {
     fun exerciseSumCalSelect():LiveData<List<ExerciseSumCalEntity>>
 
     //나자신과의 싸움에서 BarChart 클릭시 사용
-    @Query("SELECT * FROM exercisemyself WHERE My_date= :date")
-    fun exerciseMyselfDetailSelect(date:String):LiveData<List<ExerciseMyselfEntity>>
+    @Query("SELECT * FROM exercisemyself")
+    fun exerciseMyselfDetailSelect():LiveData<List<ExerciseMyselfEntity>>
 
     //운동목록에서 나자신과의 싸움 추가버튼 클릭시 사용
     @Insert(onConflict = OnConflictStrategy.REPLACE)

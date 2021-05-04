@@ -1,6 +1,8 @@
 package com.study.hometrainingkotlin.util.application
 
 import android.app.Application
+import android.content.SharedPreferences
+import com.study.hometrainingkotlin.util.Theme.ThemeUtil
 
 class ServiceApplication: Application() {
     //login과 alarmLog의 전역변수를 여기에 넣어서 사용가능 하나 일단은
@@ -33,5 +35,8 @@ class ServiceApplication: Application() {
         serviceApplicationInstance = this
         //객체 생성
         serviceInterface = ServiceInterface(applicationContext)
+        var theme:SharedPreferences = getSharedPreferences("projectfinal.code.hometraining_preferences", MODE_PRIVATE)
+        var themeValue: String? = theme.getString("themeSelect","dark")
+        ThemeUtil.applyTheme(themeValue!!)
     }
 }

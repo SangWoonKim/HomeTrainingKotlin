@@ -12,7 +12,6 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.study.hometrainingkotlin.R
@@ -36,10 +35,10 @@ class MyselfFight : AppCompatActivity() {
 
     //db에서 받은 값 저장 List
     private var detailMyselfList: ArrayList<ExerciseMyselfEntity>? = null
-
+    //날짜 형식으로 받은 데이터를 저장하는 List
+    private var optionalMyselfList: ArrayList<ExerciseMyselfEntity> = ArrayList()
     //현재 날짜를 오늘날짜로 초기화
     private var date: String = SimpleDateFormat("yyMMdd").format(Date())
-    private var date2: String = SimpleDateFormat("yyMMdd").format(Date())
     private var exerciseSumCalList: ArrayList<ExerciseSumCalEntity>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,19 +64,12 @@ class MyselfFight : AppCompatActivity() {
                 )
             }
             barDataSetting()
-
-//            //RecyclerView를 위한 부분
-//            viewModel.getMyselfDetail(date).observe(this) { changeData ->
-//                detailMyselfList = changeData as ArrayList<ExerciseMyselfEntity>
-//                setMyselfAdapter()
-//            }
         }
         //RecyclerView를 위한 부분
         //문제점 발생 LiveData형식 즉 Mutable이 아니기 때문에 다른값이 들어가지 못함...
         //1안 cursor로 받는다 즉 ExerciseDAo
-        viewModel.getMyselfDetail(date2!!).observe(this) { changeData ->
+        viewModel.getMyselfDetail().observe(this) { changeData ->
             detailMyselfList = changeData as ArrayList<ExerciseMyselfEntity>
-            setMyselfAdapter()
         }
     }
 
@@ -117,8 +109,20 @@ class MyselfFight : AppCompatActivity() {
         chart_Myself?.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
             override fun onValueSelected(e: Entry?, h: Highlight?) {
                 if (e != null) {
-                    date2 = e.x.toInt().toString()
-//                    setMyselfAdapter()
+                    //x좌표의 값 전달(x좌표의 값은 날짜임)
+                    date = e.x.toInt().toString()
+                    //optionalMyselfList에 아이템 삭제
+                    if (optionalMyselfList.size>0){
+                        optionalMyselfList.clear()
+                    }
+                    //optionalMyselfList에 아이템 삽입
+                    for (i in 0 until detailMyselfList!!.size){
+                        //My_date의 칼럼값이 date의 값과 같을 경우에만 추가
+                        if (detailMyselfList!!.get(i).My_date == date){
+                            optionalMyselfList?.add(detailMyselfList!!.get(i))
+                        }
+                    }
+                    setMyselfAdapter()
                 }
             }
 
@@ -132,7 +136,7 @@ class MyselfFight : AppCompatActivity() {
     private fun setMyselfAdapter() {
 
         if (exerciseMyselfAdapter == null) {
-            exerciseMyselfAdapter = ExerciseMyselfAdapter(detailMyselfList!!)
+            exerciseMyselfAdapter = ExerciseMyselfAdapter(optionalMyselfList!!)
             list_Myself!!.layoutManager = LinearLayoutManager(this)
             list_Myself!!.adapter = exerciseMyselfAdapter
         } else {
