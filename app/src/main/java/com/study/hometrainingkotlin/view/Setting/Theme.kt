@@ -1,4 +1,4 @@
-package com.study.hometrainingkotlin.view.option
+package com.study.hometrainingkotlin.view.Setting
 
 import android.os.Bundle
 import androidx.preference.ListPreference
@@ -14,7 +14,8 @@ class Theme: PreferenceFragmentCompat() {
         var key: ListPreference? = findPreference("themeSelect")
 
         if (key != null){
-            key.setOnPreferenceChangeListener(Preference.OnPreferenceChangeListener
+            key.setOnPreferenceChangeListener(
+                Preference.OnPreferenceChangeListener
             { preference, newValue ->
                 // 선택지를 String 값으로 받음
                 var themeOption = newValue as String

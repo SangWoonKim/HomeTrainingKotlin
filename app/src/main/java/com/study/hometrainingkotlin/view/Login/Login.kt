@@ -15,7 +15,6 @@ import com.study.hometrainingkotlin.model.externalrepository.utils.RetrofitClien
 import com.study.hometrainingkotlin.R
 import com.study.hometrainingkotlin.model.localrepository.room.DataBaseCopy
 import com.study.hometrainingkotlin.view.Register.Register
-import com.study.hometrainingkotlin.view.Setting.DarkThemeUtil
 import com.study.hometrainingkotlin.static.LoginLog
 import kotlinx.coroutines.*
 import retrofit2.Call
@@ -40,17 +39,9 @@ class Login : AppCompatActivity(), View.OnClickListener {
 
     //public var userinfo:Bundle?=null
     // public var exercise_settings : Fragment? = Exercise_Settings()
-    private lateinit var theme: SharedPreferences
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        theme = this.getSharedPreferences("com.study.hometrainingkotlin.prefs", MODE_PRIVATE)
-        var themeChanged: String = theme.getString("themeSelect", "").toString()
-        when (themeChanged) {
-            "dark" -> DarkThemeUtil.applyTheme(DarkThemeUtil.DARK_MODE)
-            "light" -> DarkThemeUtil.applyTheme(DarkThemeUtil.LIGHT_MODE)
-            "default" -> DarkThemeUtil.applyTheme(DarkThemeUtil.DEFAULT_MODE)
-        }
+
         setContentView(R.layout.login_activity)
         TV_login_restricted = findViewById<View>(R.id.TV_login_restricted) as TextView
         TV_login_restricted!!.setOnClickListener(this)

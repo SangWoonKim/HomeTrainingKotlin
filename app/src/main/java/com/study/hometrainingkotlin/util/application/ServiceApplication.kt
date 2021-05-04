@@ -35,8 +35,11 @@ class ServiceApplication: Application() {
         serviceApplicationInstance = this
         //객체 생성
         serviceInterface = ServiceInterface(applicationContext)
-        var theme:SharedPreferences = getSharedPreferences("projectfinal.code.hometraining_preferences", MODE_PRIVATE)
+        //preference파일 객체화
+        var theme:SharedPreferences = getSharedPreferences("com.study.hometrainingkotlin.prefs", MODE_PRIVATE)
+        //preference파일에서 themeSelect로 된 키값을 가져옴
         var themeValue: String? = theme.getString("themeSelect","dark")
+        //해당 값을 파라미터로 보내어 테마 변경
         ThemeUtil.applyTheme(themeValue!!)
     }
 }
