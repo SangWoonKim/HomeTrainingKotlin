@@ -14,16 +14,16 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@{exerciseitem.e_image}"/>
-        <!--<ImageView
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@{exerciseitem.e_image}"/>-->
+        <ImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:scaleType="fitXY"
-            android:src="@{exerciseitem.e_image}"/>-->
+            app:imageResource="@{exerciseitem.e_imageorg}"/>
     </LinearLayout>
 </layout>
