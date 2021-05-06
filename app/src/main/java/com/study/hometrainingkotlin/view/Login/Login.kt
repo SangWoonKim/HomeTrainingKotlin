@@ -9,17 +9,18 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.study.hometrainingkotlin.BottomNaviView
+import com.study.hometrainingkotlin.R
 import com.study.hometrainingkotlin.model.Login_Data
 import com.study.hometrainingkotlin.model.externalrepository.utils.LoginInterface
 import com.study.hometrainingkotlin.model.externalrepository.utils.RetrofitClient
-import com.study.hometrainingkotlin.R
 import com.study.hometrainingkotlin.model.localrepository.room.DataBaseCopy
-import com.study.hometrainingkotlin.view.Register.Register
 import com.study.hometrainingkotlin.static.LoginLog
+import com.study.hometrainingkotlin.view.Register.Register
 import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 
 class Login : AppCompatActivity(), View.OnClickListener {
 
@@ -63,7 +64,7 @@ class Login : AppCompatActivity(), View.OnClickListener {
         idpwSharedPreference = getSharedPreferences("getidpw", MODE_PRIVATE)
         editor = idpwSharedPreference.edit()
 
-
+        //getHashKey()
         //preference에 저장한 값을 불러오기 부분
         val id: String = idpwSharedPreference.getString("id", "").toString()
         val pw: String = idpwSharedPreference.getString("pw", "").toString()
@@ -125,15 +126,21 @@ class Login : AppCompatActivity(), View.OnClickListener {
                 loginHashMapData.put("id", ET_login_Id?.text.toString())
                 loginHashMapData.put("nickname", ET_login_Password?.text.toString())
 
-                var loginInterface: LoginInterface = RetrofitClient.RetrofitClient.getInstance().create(LoginInterface::class.java)
+                var loginInterface: LoginInterface =
+                    RetrofitClient.RetrofitClient.getInstance().create(
+                        LoginInterface::class.java
+                    )
                 var callLogin: Call<Login_Data>? = loginInterface.post_Login(loginHashMapData)
                 if (callLogin != null) {
                     callLogin.enqueue(object : Callback<Login_Data> {
-                        override fun onResponse(call: Call<Login_Data>, response: Response<Login_Data>) {
+                        override fun onResponse(
+                            call: Call<Login_Data>,
+                            response: Response<Login_Data>
+                        ) {
                             Log.d(javaClass.simpleName, "상태코드" + response.code())
                             if (response.isSuccessful) {
                                 //서버에서 조회시 아무것도 조회를 하지못하면 null을 반환하기에 만들었음
-                                if (response.body()!=null) {
+                                if (response.body() != null) {
                                     //콜백
                                     var loginResponse: Login_Data = response.body()!!
 
@@ -143,12 +150,19 @@ class Login : AppCompatActivity(), View.OnClickListener {
 
                                     LoginLog.getInstance()!!.setloginIdLog(idLog)
                                     LoginLog.getInstance()!!.setloginPwLog(pwLog)
-                                    val mainActivity: Intent = Intent(this@Login, BottomNaviView::class.java)
+                                    val mainActivity: Intent = Intent(
+                                        this@Login,
+                                        BottomNaviView::class.java
+                                    )
                                     mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                     mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                     startActivity(mainActivity)
-                                }else if(response.body()==null){
-                                    Toast.makeText(this@Login,"비밀번호 또는 id를 확인하세요",Toast.LENGTH_SHORT).show()
+                                } else if (response.body() == null) {
+                                    Toast.makeText(
+                                        this@Login,
+                                        "비밀번호 또는 id를 확인하세요",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }
                             }
                         }
@@ -164,4 +178,24 @@ class Login : AppCompatActivity(), View.OnClickListener {
             }
         }
     }
+
+//    카카오톡 키해쉬 등록을 위한 로직
+//    private fun getHashKey() {
+//        var packageInfo: PackageInfo? = null
+//        try {
+//            packageInfo = packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES)
+//        } catch (e: PackageManager.NameNotFoundException) {
+//            e.printStackTrace()
+//        }
+//        if (packageInfo == null) Log.e("KeyHash", "KeyHash:null")
+//        for (signature in packageInfo!!.signatures) {
+//            try {
+//                val md: MessageDigest = MessageDigest.getInstance("SHA")
+//                md.update(signature.toByteArray())
+//                Log.d("KeyHash", Base64.encodeToString(md.digest(), Base64.DEFAULT))
+//            } catch (e: NoSuchAlgorithmException) {
+//                Log.e("KeyHash", "Unable to get MessageDigest. signature=$signature", e)
+//            }
+//        }
+//    }
 }
