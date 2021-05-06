@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.study.hometrainingkotlin">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -17,6 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HomeTrainingKotlin"
         android:usesCleartextTraffic="true">
+        <activity android:name=".view.kakao.KakaoMapsMain"></activity>
         <activity
             android:name=".view.Splash.initSplashView"
             android:screenOrientation="fullSensor"
@@ -27,7 +28,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.ExerciseList.MyselfFight"></activity>
+        <activity android:name=".view.ExerciseList.MyselfFight" />
         <activity android:name=".view.alarm.Alarm" />
         <activity android:name=".view.exercise.Loins" />
         <activity android:name=".view.exercise.Body" />
@@ -51,9 +52,10 @@
         <receiver
             android:name=".util.notification.ExerciseAlarmNotification"
             android:enabled="true"
-            android:exported="true"></receiver>
-        <!--카카오맵에 필요한 키-->
-        <meta-data android:name="com.kakao.sdk.AppKey" android:value="@string/kakaomap_key"/>
+            android:exported="true" /> <!-- 카카오맵에 필요한 키 -->
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="@string/kakaomap_key" />
     </application>
 
 </manifest>
