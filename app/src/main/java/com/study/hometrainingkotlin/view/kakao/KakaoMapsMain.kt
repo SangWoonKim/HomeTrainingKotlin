@@ -33,7 +33,7 @@ class KakaoMapsMain : AppCompatActivity(){
             if (locationPermission == PackageManager.PERMISSION_GRANTED){
 
             }else{ //권한 등록이 되어있지 않는 경우
-                
+
             }
         }else{
 
