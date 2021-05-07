@@ -2,4 +2,5 @@
     <string name="app_name">HomeTrainingKotlin</string>
     <string name="restricted_login">회원가입시 많은 기능을 사용할 수 있습니다.</string>
     <string name="kakaomap_key">a3e1fd32b27a8ff378f415ca93b7b50c</string>
+    <string name="kakao_rest_api_key">8ed3c141cc239582f4074c40f8faf784</string>
 </resources>
