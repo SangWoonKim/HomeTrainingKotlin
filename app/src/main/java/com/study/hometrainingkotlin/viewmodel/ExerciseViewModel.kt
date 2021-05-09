@@ -6,6 +6,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.study.hometrainingkotlin.model.externalrepository.repository.ExerciseRepository
 import com.study.hometrainingkotlin.model.externalrepository.vo.ExerciseData
+import com.study.hometrainingkotlin.model.kakao.repository.KakaoRepository
+import com.study.hometrainingkotlin.model.kakao.vo.Documents
 import com.study.hometrainingkotlin.model.localrepository.room.dao.ExerciseListEntity
 import com.study.hometrainingkotlin.model.localrepository.room.repository.ExerciseListRepository
 import com.study.hometrainingkotlin.model.localrepository.room.repository.ExerciseMyselfRepository
@@ -30,6 +32,7 @@ class ExerciseViewModel(application: Application): AndroidViewModel(application)
     private val exerciseSumCalRepository:ExerciseSumCalRepository by lazy {
         ExerciseSumCalRepository(application)
     }
+    private val kakaoRepository:KakaoRepository = KakaoRepository.getInstance()!!
 
     /**
      * 운동선택에서 사용되는 메소드
@@ -103,6 +106,13 @@ class ExerciseViewModel(application: Application): AndroidViewModel(application)
         return exerciseMyselfRepository.selectMyselfDetail()
     }
 
+
+    /**
+     * 카카오맵에서 사용되는 메소드
+     * */
+    fun getSearchResult(x:String,y:String):ArrayList<Documents>{
+        return kakaoRepository.getGymSearchLocation(x,y)
+    }
 
 }
 
