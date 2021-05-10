@@ -94,6 +94,8 @@ dependencies {
     implementation 'androidx.preference:preference-ktx:1.1.1'
     //kakaoMap
     implementation files('libs/libDaumMapAndroid.jar')
+    //databinding
+    kapt "androidx.databinding:databinding-compiler:4.1.2"
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
