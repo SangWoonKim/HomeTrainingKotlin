@@ -43,7 +43,6 @@ class KakaoMapsMain : AppCompatActivity(),MapView.CurrentLocationEventListener, 
         var mapViewContainer:ViewGroup = findViewById(R.id.MV_Kakao_Main)
         mapViewContainer.addView(mapView)
 
-
     }
     /**
      * 권한에 대한 부분
@@ -214,12 +213,23 @@ class KakaoMapsMain : AppCompatActivity(),MapView.CurrentLocationEventListener, 
             Color.rgb(255,255,255)
         )
         mapView!!.addCircle(circle)
+        //리턴받은 배열의 아이템을 반복
         searchResult.forEach{
-            var marker: MapPOIItem = MapPOIItem()
-            marker.mapPoint
-
+            //맵 포인트(좌표) 객체 생성
             var markerPoint:MapPoint = MapPoint.mapPointWithGeoCoord(it.x.toDouble(),it.y.toDouble())
+            //마커 객체 생성
+            var marker: MapPOIItem = MapPOIItem()
+            //마커클릭시 나타내는 이름
+            marker.itemName=it.place_name
+            //마커 좌표 설정
+            marker.mapPoint = markerPoint
+            //마커 모양 설정
+            marker.markerType = MapPOIItem.MarkerType.BluePin
+            //마커 클릭시 마커모양 설정
+            marker.selectedMarkerType = MapPOIItem.MarkerType.RedPin
 
+            //mapView(지도)에 마커 추가
+            mapView!!.addPOIItem(marker)
         }
     }
 
@@ -280,7 +290,7 @@ class KakaoMapsMain : AppCompatActivity(),MapView.CurrentLocationEventListener, 
 
     //사용자가 마커(POI)를 선택시 호출
     override fun onPOIItemSelected(p0: MapView?, p1: MapPOIItem?) {
-        TODO("Not yet implemented")
+
     }
 
     //deprecated됨 근데 선언이 강제로 되어있어 호출함
@@ -288,18 +298,23 @@ class KakaoMapsMain : AppCompatActivity(),MapView.CurrentLocationEventListener, 
 
     }
 
-    //마커 클릭시 나타나는 풍선을 클릭시 호출출
+    //마커 클릭시 나타나는 풍선을 클릭시 호출(마커를 표시하는 mapview,마커 아이템, 마커의 버튼타입?)
     override fun onCalloutBalloonOfPOIItemTouched(
         p0: MapView?,
         p1: MapPOIItem?,
         p2: MapPOIItem.CalloutBalloonButtonType?
     ) {
-        TODO("Not yet implemented")
+        //(선택한 마커의 x,y 좌표를 lat,lng에 각각 저장
+        var lat = p1!!.mapPoint.mapPointGeoCoord.latitude
+        var lng = p1!!.mapPoint.mapPointGeoCoord.longitude
+        Log.i("선택한 마커의 x좌표확인",lat.toString())
+        Log.i("선택한 마커의 y좌표확인",lng.toString())
+        //상세정보를 위한 alertdialog작성과 재검색 하기
     }
 
-    //마커를 이동시켰을 때 호출
+    //마커를 이동시켰을 때 호출(안씀)
     override fun onDraggablePOIItemMoved(p0: MapView?, p1: MapPOIItem?, p2: MapPoint?) {
-        TODO("Not yet implemented")
+
     }
 
 
@@ -310,12 +325,12 @@ class KakaoMapsMain : AppCompatActivity(),MapView.CurrentLocationEventListener, 
 
     //주소를 찾은 경우 호출된다.
     override fun onReverseGeoCoderFoundAddress(p0: MapReverseGeoCoder?, p1: String?) {
-        TODO("Not yet implemented")
+
     }
 
     //Reverse Geo-Coding 서비스 호출에 실패한 경우 호출된다.
     override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
-        TODO("Not yet implemented")
+
     }
 
 
