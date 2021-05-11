@@ -110,16 +110,9 @@ class ExerciseViewModel(application: Application): AndroidViewModel(application)
     /**
      * 카카오맵에서 사용되는 메소드
      * */
-//    fun getSearchResult(x:String,y:String):Documents{
-//        return kakaoRepository.getGymSearchLocation(x,y)
-//    }
 
     fun getSearchResult(x:String,y:String):Documents?{
         return kakaoRepository.getGymSearchResult(x,y)
-    }
-
-    fun getSearchResult2(){
-        kakaoRepository.getGymSearchLocation2()
     }
 
 }

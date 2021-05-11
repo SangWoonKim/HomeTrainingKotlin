@@ -76,34 +76,4 @@ class KakaoRepository {
         return searchResultArray
     }
 
-
-    //test코드(성공)
-     fun getGymSearchLocation2(){
-        var searchRequestCallback: Call<Documents> = requestServer.searchKeyword(
-            "KakaoAK 8ed3c141cc239582f4074c40f8faf784",
-            "근처헬스장",
-            "37.38023273704522",
-            "127.23256409811758",
-            1000,
-            15)
-        if (searchRequestCallback != null){
-            searchRequestCallback.enqueue(object :Callback<Documents>{
-                override fun onResponse(
-                    call: Call<Documents>,
-                    response: Response<Documents>
-                ) {
-                    Log.d("Test", "Raw: ${response.raw()}")
-                    Log.d("Test", "Body: ${response.body()}")
-                    Log.i("카카오맵 서버응답코드",""+response.code())
-
-                }
-
-                override fun onFailure(call: Call<Documents>, t: Throwable) {
-                    Log.i("카카오맵 에러메시지",""+t.message)
-                }
-            })
-        }
-     }
-
-
 }

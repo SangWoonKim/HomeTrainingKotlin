@@ -1,11 +1,11 @@
 package com.study.hometrainingkotlin.view.kakao
 
 import android.Manifest
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.LocationManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -21,9 +21,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.study.hometrainingkotlin.R
+import com.study.hometrainingkotlin.model.kakao.util.RetrofitClientKakaoMaps
+import com.study.hometrainingkotlin.model.kakao.util.SearchInterface
 import com.study.hometrainingkotlin.model.kakao.vo.Documents
 import com.study.hometrainingkotlin.viewmodel.ExerciseViewModel
 import net.daum.mf.map.api.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class KakaoMapsMain : AppCompatActivity(), MapView.CurrentLocationEventListener,
     MapView.POIItemEventListener,
@@ -380,12 +385,40 @@ class KakaoMapsMain : AppCompatActivity(), MapView.CurrentLocationEventListener,
         var dialog:AlertDialog.Builder = AlertDialog.Builder(this)
         dialog.setTitle("선택해주세요")
         dialog.setCancelable(true)
-        dialog.setPositiveButton("세부정보", object : DialogInterface.OnClickListener {
-            override fun onClick(dialog: DialogInterface?, which: Int) {
-//                var detailIntent= Intent(KakaoMapsMain)
-            }
+        dialog.setPositiveButton("세부정보"
+        ) { dialog, which ->
+            //하드코딩(이유) 응답을 받아야만 실행할수 있도록 해야하기 때문
+            //코드가 너무 더럽지만 나중에 인터페이스로 해결하도록 해볼예정
+            var retrofitInstance:SearchInterface = RetrofitClientKakaoMaps.RetrofitKakaoClient.getInstance().create(SearchInterface::class.java)
+            var request:Call<Documents> = retrofitInstance.searchKeyword(getString(R.string.kakao_rest_api_key),
+                p1.itemName,
+                lat.toString(),
+                lng.toString(),
+                1000,
+                1
+                )
+            request.enqueue(object:Callback<Documents>{
+                override fun onResponse(call: Call<Documents>, response: Response<Documents>) {
+                    if(response.isSuccessful){
+                        var detailIntent:Intent= Intent(this@KakaoMapsMain,KakaoDetailActivity::class.java)
+                        //parcelable필요
+                        detailIntent.putExtra("detailSearch",response.body())
+                        startActivity(detailIntent)
+                    }
+                }
 
-        })
+                override fun onFailure(call: Call<Documents>, t: Throwable) {
+                    Toast.makeText(applicationContext, "해당장소에 대한 상세정보는 없습니다.", Toast.LENGTH_SHORT).show()
+                }
+            })
+
+        }
+        dialog.setNegativeButton("길 찾기"
+        ) { dialog, which ->
+            //여기에 카카오지도를 나타낼수 있게 하는 코드 작성(현재위치, 가고자하는 마커의 위치)
+            openKakaoMaps(Uri.parse("kakaomap://route?sp=$mCurrentLat,$mCurrentLng&ep=$lat,$lng&by=FOOT"))
+        }
+        dialog.create().show()
     }
 
     //마커를 이동시켰을 때 호출(안씀)
@@ -409,9 +442,27 @@ class KakaoMapsMain : AppCompatActivity(), MapView.CurrentLocationEventListener,
 
     }
 
+    /**
+     * 카카오맵 길찾기 (도보) 띄우는 부분
+     * */
+
+    private fun openKakaoMaps(markerGeoLocation:Uri){
+        var kakaoMapsAppIntent:Intent
+        try {
+            Toast.makeText(this, "카카오맵으로 길찾기를 시도합니다", Toast.LENGTH_LONG).show()
+            //카카오맵 띄우는 인텐트
+            kakaoMapsAppIntent = Intent(Intent.ACTION_VIEW,markerGeoLocation)
+            startActivity(kakaoMapsAppIntent)
+        }catch (e:Exception){
+            Toast.makeText(this, "카카오맵으로 길찾기를 시도합니다", Toast.LENGTH_LONG).show()
+            //카카오맵 설치하는 인텐트
+            kakaoMapsAppIntent = Intent(Intent.ACTION_VIEW).setData(Uri.parse("https://play.google.com/store/apps/details?id=net.daum.android.map&hl=ko"))
+            startActivity(kakaoMapsAppIntent)
+        }
+    }
+
     override fun onClick(v: View?) {
         when(v!!.id){
-//            R.id.BTN_Kakao_Search -> viewModel.getSearchResult2()
             R.id.BTN_Kakao_Search ->  nearbySearch(mCurrentLat!!, mCurrentLng!!)
         }
     }

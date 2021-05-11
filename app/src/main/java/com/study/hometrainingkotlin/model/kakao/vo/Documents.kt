@@ -1,8 +1,15 @@
 package com.study.hometrainingkotlin.model.kakao.vo
 
+import android.os.Parcelable
+import com.google.gson.annotations.Expose
+import kotlinx.android.parcel.Parcelize
+import kotlinx.android.parcel.RawValue
+
+@Parcelize
 data class Documents(
-    var documents: ArrayList<Document>
-)
+    var documents: @RawValue ArrayList<Document>
+):Parcelable
+
 
 data class Document(
     val address_name: String,
