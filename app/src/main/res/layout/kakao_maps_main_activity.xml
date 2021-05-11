@@ -6,14 +6,24 @@
     android:layout_height="match_parent"
     tools:context=".view.kakao.KakaoMapsMain">
 
+    <Button
+        android:id="@+id/BTN_Kakao_Search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="근처 찾기"
+        app:layout_constraintBottom_toTopOf="@+id/MV_Kakao_Main"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <RelativeLayout
         android:id="@+id/MV_Kakao_Main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/BTN_Kakao_Search">
 
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

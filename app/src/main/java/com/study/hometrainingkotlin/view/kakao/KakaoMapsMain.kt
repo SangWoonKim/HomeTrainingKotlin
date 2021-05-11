@@ -1,6 +1,7 @@
 package com.study.hometrainingkotlin.view.kakao
 
 import android.Manifest
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -9,7 +10,9 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
@@ -22,28 +25,54 @@ import com.study.hometrainingkotlin.model.kakao.vo.Documents
 import com.study.hometrainingkotlin.viewmodel.ExerciseViewModel
 import net.daum.mf.map.api.*
 
-class KakaoMapsMain : AppCompatActivity(),MapView.CurrentLocationEventListener, MapView.POIItemEventListener,
-    MapReverseGeoCoder.ReverseGeoCodingResultListener{
-    companion object{
+class KakaoMapsMain : AppCompatActivity(), MapView.CurrentLocationEventListener,
+    MapView.POIItemEventListener,
+    MapReverseGeoCoder.ReverseGeoCodingResultListener,
+    View.OnClickListener{
+    companion object {
         //설정의 gps허용에 대해 수신받는코드
         const val GPS_REQUEST_CODE = 0x234
         const val PERMISSION_REQUEST_CODE = 0x345
     }
+
     //메니페스트의 권한이 명시된 변수
     private var manifestLocationPermissionCheck = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
-    private var mapView:MapView?=null
-    private var searchResult:ArrayList<Documents>?= null
-    private val viewModel:ExerciseViewModel by viewModels()
+    private var mapView: MapView? = null
+    private var searchResult: Documents? = null
+    private val viewModel: ExerciseViewModel by viewModels()
 
+    //버튼
+    private var BTN_Kakao_Search: Button? = null
+
+    //현재 위치의 x,y좌표
+    private var mCurrentLat: Double? = null
+    private var mCurrentLng: Double? = null
+
+
+    @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.kakao_maps_main_activity)
 
         mapView = MapView(this)
-        var mapViewContainer:ViewGroup = findViewById(R.id.MV_Kakao_Main)
+        var mapViewContainer: ViewGroup = findViewById(R.id.MV_Kakao_Main)
         mapViewContainer.addView(mapView)
-
+        //권한 확인
+        checkPermission()
+        //맵뷰 인터페이스에 대한 등록
+        mapView!!.setCurrentLocationEventListener(this)
+        mapView!!.setPOIItemEventListener(this)
+//        mapView!!.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
+        BTN_Kakao_Search = findViewById(R.id.BTN_Kakao_Search)
+        BTN_Kakao_Search!!.setOnClickListener(this)
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mapView!!.currentLocationTrackingMode= MapView.CurrentLocationTrackingMode.TrackingModeOff
+        mapView!!.setShowCurrentLocationMarker(false)
+    }
+
     /**
      * 권한에 대한 부분
      * 1.전체적인 권한 확인
@@ -57,29 +86,31 @@ class KakaoMapsMain : AppCompatActivity(),MapView.CurrentLocationEventListener, 
     //1
     //권한 설정및 알림
     @RequiresApi(Build.VERSION_CODES.P)
-    fun checkPermission(){
+    fun checkPermission() {
         //GPS모듈이 사용가능한 기기인지 확인
-        if (packageManager.hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS)){
+        if (packageManager.hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS)) {
             //메니페스트 권한 등록 확인
             var locationPermission = ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
             )
             //앱에서 위치서비스 권한 허용 확인
-            if (locationPermission == PackageManager.PERMISSION_GRANTED){
+            if (locationPermission == PackageManager.PERMISSION_GRANTED) {
                 //현재위치를 얻을 수 있는지 확인
-                if (locationReturn()){
+                if (locationReturn()) {
                     //트랙킹모드를 이용하여 내 위치에 따라 지도의 중심이 이동됨
-                    mapView!!.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithHeading
-                }else{
+                    mapView!!.currentLocationTrackingMode =
+                        MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
+                } else {
                     gpsDialog()
                 }
-            }else{ //앱에서 위치서비스 권한 허용이 되어있지 않는 경우
+            } else { //앱에서 위치서비스 권한 허용이 되어있지 않는 경우
                 if (ActivityCompat.shouldShowRequestPermissionRationale(
                         this, manifestLocationPermissionCheck.get(
                             0
                         )
-                    )){
+                    )
+                ) {
                     Toast.makeText(this, "이 앱을 사용하려면 위치 접근 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
                     //앱에서 위치서비스에 대한 권한을 요청하는 코드
                     //(context,arrayof(manifest.permission),requestCode) (context,필요한 권한,반환받을 코드값)
@@ -88,7 +119,7 @@ class KakaoMapsMain : AppCompatActivity(),MapView.CurrentLocationEventListener, 
                         manifestLocationPermissionCheck,
                         PERMISSION_REQUEST_CODE
                     )
-                }else{
+                } else {
                     ActivityCompat.requestPermissions(
                         this,
                         manifestLocationPermissionCheck,
@@ -96,7 +127,7 @@ class KakaoMapsMain : AppCompatActivity(),MapView.CurrentLocationEventListener, 
                     )
                 }
             }
-        }else{
+        } else {
             Toast.makeText(this, "GPS사용이 불가능한 기기입니다.", Toast.LENGTH_SHORT).show()
             finish()
         }
@@ -107,8 +138,8 @@ class KakaoMapsMain : AppCompatActivity(),MapView.CurrentLocationEventListener, 
     //GPS나 3g,4g를 이용하여 GPS또는 Network수신자의 상태를 반환
     //현재 위치를 반환할 수 있을경우 true반환
     @RequiresApi(Build.VERSION_CODES.P)
-    fun locationReturn() : Boolean{
-        var locationManager:LocationManager = getSystemService(LOCATION_SERVICE) as LocationManager
+    fun locationReturn(): Boolean {
+        var locationManager: LocationManager = getSystemService(LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
             LocationManager.NETWORK_PROVIDER
         )
@@ -117,12 +148,12 @@ class KakaoMapsMain : AppCompatActivity(),MapView.CurrentLocationEventListener, 
 
     //3
     //gps 활성화를 위한 다이얼로그 생성
-    fun gpsDialog(){
+    fun gpsDialog() {
         var dialog: AlertDialog.Builder = AlertDialog.Builder(this)
         dialog.setTitle("위치 서비스 설정")
         dialog.setMessage("위치 서비스를 설정해야 기능이 활성화됩니다 활성화 하시겠습니까?")
         dialog.setCancelable(true)
-        dialog.setPositiveButton("설정"){ d, w ->
+        dialog.setPositiveButton("설정") { d, w ->
             //환경설정에서 gps설정을 지정
             var gpsSetting = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
             //(intent,requestCode) (open할 intent, intent에서 결과값을 전달할 key(requestCode설정)
@@ -138,9 +169,9 @@ class KakaoMapsMain : AppCompatActivity(),MapView.CurrentLocationEventListener, 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(requestCode == GPS_REQUEST_CODE){
+        if (requestCode == GPS_REQUEST_CODE) {
             Toast.makeText(this, "GPS가 허용되었습니다", Toast.LENGTH_SHORT).show()
-            if (locationReturn()){
+            if (locationReturn()) {
                 Toast.makeText(this, "GPS가 수신되었습니다", Toast.LENGTH_SHORT).show()
                 checkPermission()
                 return
@@ -159,11 +190,11 @@ class KakaoMapsMain : AppCompatActivity(),MapView.CurrentLocationEventListener, 
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         //요청코드 확인 및 권한에 대한 정보 확인(배열인 이유는 메니페스트에서 받는 값이 배열이기 때문 즉 size가 같으면 같은 권한)
-        if (requestCode == PERMISSION_REQUEST_CODE && grantResults.size == manifestLocationPermissionCheck.size){
-            var result_check:Boolean = true
+        if (requestCode == PERMISSION_REQUEST_CODE && grantResults.size == manifestLocationPermissionCheck.size) {
+            var result_check: Boolean = true
 
             //코틀린의 foreach문은 break가 없어 label을 이용하여 break를 만듬
-            run{
+            run {
                 //퍼미션 체크
                 grantResults.forEach {
                     if (it != PackageManager.PERMISSION_GRANTED) {
@@ -176,7 +207,7 @@ class KakaoMapsMain : AppCompatActivity(),MapView.CurrentLocationEventListener, 
             if (result_check) {
                 mapView!!.currentLocationTrackingMode =
                     MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
-            }else{
+            } else {
                 //거부한 퍼미션이 있을 경우 앱을 사용할 수 없는 이유를 설명하고 앱을 종료
 
                 //거부한 퍼미션이 있을 경우 앱을 사용할 수 없는 이유를 설명하고 앱을 종료
@@ -184,8 +215,10 @@ class KakaoMapsMain : AppCompatActivity(),MapView.CurrentLocationEventListener, 
                         this, manifestLocationPermissionCheck.get(
                             0
                         )
-                    )) {
-                    Toast.makeText(this, "퍼미션이 거부되었습니다. 앱을 다시 실행하여 퍼미션을 허용해주세요", Toast.LENGTH_LONG).show()
+                    )
+                ) {
+                    Toast.makeText(this, "퍼미션이 거부되었습니다. 앱을 다시 실행하여 퍼미션을 허용해주세요", Toast.LENGTH_LONG)
+                        .show()
                     finish()
                 } else {
                     Toast.makeText(
@@ -204,23 +237,26 @@ class KakaoMapsMain : AppCompatActivity(),MapView.CurrentLocationEventListener, 
      * */
 
     //rest통신을 통한 반경1km내의 헬스장 마커를 찍는 메소드
-    fun nearbySearch(x:Double,y:Double){
-        var searchResult = viewModel.getSearchResult(x.toString(),y.toString())
-        var circle : MapCircle = MapCircle(
-            MapPoint.mapPointWithGeoCoord(x,y),
+    fun nearbySearch(x: Double, y: Double) {
+        searchResult=viewModel.getSearchResult(x.toString(), y.toString())
+        var circle: MapCircle = MapCircle(
+            MapPoint.mapPointWithGeoCoord(x, y),
             1000,
-            Color.rgb(255,255,255),
-            Color.rgb(255,255,255)
+            Color.argb(128,255, 255, 255),
+            Color.argb(128,255, 255, 255)
         )
         mapView!!.addCircle(circle)
         //리턴받은 배열의 아이템을 반복
-        searchResult.forEach{
+        //마커 추가가 안됨
+        searchResult!!.documents.forEach {
             //맵 포인트(좌표) 객체 생성
-            var markerPoint:MapPoint = MapPoint.mapPointWithGeoCoord(it.x.toDouble(),it.y.toDouble())
+            //속지말자...(x,y)가 아니라 (y,x)다
+            var markerPoint: MapPoint =
+                MapPoint.mapPointWithGeoCoord(it.y.toDouble(),it.x.toDouble())
             //마커 객체 생성
             var marker: MapPOIItem = MapPOIItem()
             //마커클릭시 나타내는 이름
-            marker.itemName=it.place_name
+            marker.itemName = it.place_name
             //마커 좌표 설정
             marker.mapPoint = markerPoint
             //마커 모양 설정
@@ -233,6 +269,35 @@ class KakaoMapsMain : AppCompatActivity(),MapView.CurrentLocationEventListener, 
         }
     }
 
+//    fun nearbySearch(x: Double, y: Double) {
+//        searchResult = viewModel.getSearchResult(x.toString(), y.toString())
+//        var circle: MapCircle = MapCircle(
+//            MapPoint.mapPointWithGeoCoord(x, y),
+//            1000,
+//            Color.rgb(255, 255, 255),
+//            Color.rgb(255, 255, 255)
+//        )
+//        mapView!!.addCircle(circle)
+//        //리턴받은 배열의 아이템을 반복
+//        searchResult!!.documents.forEach {
+//            //맵 포인트(좌표) 객체 생성
+//            var markerPoint: MapPoint =
+//                MapPoint.mapPointWithGeoCoord(it.x.toDouble(), it.y.toDouble())
+//            //마커 객체 생성
+//            var marker: MapPOIItem = MapPOIItem()
+//            //마커클릭시 나타내는 이름
+//            marker.itemName = it.place_name
+//            //마커 좌표 설정
+//            marker.mapPoint = markerPoint
+//            //마커 모양 설정
+//            marker.markerType = MapPOIItem.MarkerType.BluePin
+//            //마커 클릭시 마커모양 설정
+//            marker.selectedMarkerType = MapPOIItem.MarkerType.RedPin
+//
+//            //mapView(지도)에 마커 추가
+//            mapView!!.addPOIItem(marker)
+//        }
+//    }
 
 
     /**
@@ -244,7 +309,7 @@ class KakaoMapsMain : AppCompatActivity(),MapView.CurrentLocationEventListener, 
     override fun onCurrentLocationUpdate(p0: MapView?, p1: MapPoint?, p2: Float) {
         //위경도 좌표를 이용하여 좌표값으로 mapPoint객체 생성
         // (mapPoint객체는 지도화면 위의 위치와 관련된 작업을 처리할 때 사용)
-        var mapPoint:MapPoint.GeoCoordinate =p1!!.mapPointGeoCoord
+        var mapPoint: MapPoint.GeoCoordinate = p1!!.mapPointGeoCoord
         Log.i(
             "LocationUpdate!", String.format(
                 "MapView onCurrentLocationUpdate (%f,%f) accuracy(%f)",
@@ -254,16 +319,16 @@ class KakaoMapsMain : AppCompatActivity(),MapView.CurrentLocationEventListener, 
             )
         )
         //현재 위치를 geo형식으로 저장
-        var currentMapPoint:MapPoint = MapPoint.mapPointWithGeoCoord(
+        var currentMapPoint: MapPoint = MapPoint.mapPointWithGeoCoord(
             mapPoint.latitude,
             mapPoint.longitude
         )
         //이 좌표로 지도 중심 이동
         mapView!!.setMapCenterPoint(currentMapPoint, true)
         //전역변수로 현재 좌표 저장
-        var mCurrentLat = mapPoint.latitude
-        var mCurrentLng = mapPoint.longitude
-        Log.i("updateLocation2","현재위치 => $mCurrentLat  $mCurrentLng")
+        mCurrentLat = mapPoint.latitude
+        mCurrentLng = mapPoint.longitude
+        Log.i("updateLocation2", "현재위치 => $mCurrentLat  $mCurrentLng")
     }
 
     //기기의 각도값을 통보받는 메소드
@@ -273,14 +338,16 @@ class KakaoMapsMain : AppCompatActivity(),MapView.CurrentLocationEventListener, 
 
     //현 위치 갱신 작업이 실패한 경우 호출
     override fun onCurrentLocationUpdateFailed(p0: MapView?) {
-        Log.i("updateFailed","updateFailed")
-        mapView!!.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithHeading
+        Log.i("updateFailed", "updateFailed")
+        mapView!!.currentLocationTrackingMode =
+            MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
     }
 
     //트래킹모드가 사용자에 의해 취소된 경우 호출
     override fun onCurrentLocationUpdateCancelled(p0: MapView?) {
-        Log.i("updateCancel","updateCancel")
-        mapView!!.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithHeading
+        Log.i("updateCancel", "updateCancel")
+        mapView!!.currentLocationTrackingMode =
+            MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
     }
 
 
@@ -307,9 +374,18 @@ class KakaoMapsMain : AppCompatActivity(),MapView.CurrentLocationEventListener, 
         //(선택한 마커의 x,y 좌표를 lat,lng에 각각 저장
         var lat = p1!!.mapPoint.mapPointGeoCoord.latitude
         var lng = p1!!.mapPoint.mapPointGeoCoord.longitude
-        Log.i("선택한 마커의 x좌표확인",lat.toString())
-        Log.i("선택한 마커의 y좌표확인",lng.toString())
+        Log.i("선택한 마커의 x좌표확인", lat.toString())
+        Log.i("선택한 마커의 y좌표확인", lng.toString())
         //상세정보를 위한 alertdialog작성과 재검색 하기
+        var dialog:AlertDialog.Builder = AlertDialog.Builder(this)
+        dialog.setTitle("선택해주세요")
+        dialog.setCancelable(true)
+        dialog.setPositiveButton("세부정보", object : DialogInterface.OnClickListener {
+            override fun onClick(dialog: DialogInterface?, which: Int) {
+//                var detailIntent= Intent(KakaoMapsMain)
+            }
+
+        })
     }
 
     //마커를 이동시켰을 때 호출(안씀)
@@ -331,6 +407,13 @@ class KakaoMapsMain : AppCompatActivity(),MapView.CurrentLocationEventListener, 
     //Reverse Geo-Coding 서비스 호출에 실패한 경우 호출된다.
     override fun onReverseGeoCoderFailedToFindAddress(p0: MapReverseGeoCoder?) {
 
+    }
+
+    override fun onClick(v: View?) {
+        when(v!!.id){
+//            R.id.BTN_Kakao_Search -> viewModel.getSearchResult2()
+            R.id.BTN_Kakao_Search ->  nearbySearch(mCurrentLat!!, mCurrentLng!!)
+        }
     }
 
 

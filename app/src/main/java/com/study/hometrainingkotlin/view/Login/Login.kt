@@ -85,6 +85,8 @@ class Login : AppCompatActivity(), View.OnClickListener {
         runBlocking {
             copyStart.join()
         }
+
+//        getHashKey()
     }
 
 
@@ -174,12 +176,11 @@ class Login : AppCompatActivity(), View.OnClickListener {
                     }
                     )
                 }
-
             }
         }
     }
 
-//    카카오톡 키해쉬 등록을 위한 로직
+    //카카오톡 키해쉬 등록을 위한 로직
 //    private fun getHashKey() {
 //        var packageInfo: PackageInfo? = null
 //        try {
