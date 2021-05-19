@@ -10,7 +10,7 @@ data class Documents(
     var documents: @RawValue ArrayList<Document>
 ):Parcelable
 
-
+@Parcelize
 data class Document(
     val address_name: String,
     val category_group_code: String,
@@ -24,4 +24,4 @@ data class Document(
     val road_address_name: String,
     val x: Double,
     val y: Double
-)
+):Parcelable

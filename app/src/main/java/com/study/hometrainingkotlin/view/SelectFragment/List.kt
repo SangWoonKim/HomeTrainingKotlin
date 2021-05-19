@@ -20,6 +20,7 @@ import com.study.hometrainingkotlin.R
 import com.study.hometrainingkotlin.model.localrepository.room.dao.ExerciseListEntity
 import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseMyselfEntity
 import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseSumCalEntity
+import com.study.hometrainingkotlin.view.ExerciseList.Active
 import com.study.hometrainingkotlin.view.ExerciseList.MyselfFight
 import com.study.hometrainingkotlin.view.adapter.ExerciseListAdapter
 import com.study.hometrainingkotlin.viewmodel.ExerciseViewModel
@@ -201,7 +202,8 @@ class List : Fragment(), View.OnClickListener {
 
             //운동실행 버튼 (애니메이션 실행)
             R.id.BTN_List_active -> {
-
+                val activeActivity:Intent = Intent(activity,Active::class.java)
+                startActivity(activeActivity)
             }
         }
     }

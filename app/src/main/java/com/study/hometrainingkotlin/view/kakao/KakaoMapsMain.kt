@@ -401,7 +401,7 @@ class KakaoMapsMain : AppCompatActivity(), MapView.CurrentLocationEventListener,
                 override fun onResponse(call: Call<Documents>, response: Response<Documents>) {
                     if(response.isSuccessful){
                         var detailIntent:Intent= Intent(this@KakaoMapsMain,KakaoDetailActivity::class.java)
-                        //parcelable필요
+                        //parcel화(직렬화)를 통해 내용 출력
                         detailIntent.putExtra("detailSearch",response.body())
                         startActivity(detailIntent)
                     }
@@ -454,7 +454,7 @@ class KakaoMapsMain : AppCompatActivity(), MapView.CurrentLocationEventListener,
             kakaoMapsAppIntent = Intent(Intent.ACTION_VIEW,markerGeoLocation)
             startActivity(kakaoMapsAppIntent)
         }catch (e:Exception){
-            Toast.makeText(this, "카카오맵으로 길찾기를 시도합니다", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "카카오맵 앱이 없습니다 플레이스토어로 이동합니다.", Toast.LENGTH_LONG).show()
             //카카오맵 설치하는 인텐트
             kakaoMapsAppIntent = Intent(Intent.ACTION_VIEW).setData(Uri.parse("https://play.google.com/store/apps/details?id=net.daum.android.map&hl=ko"))
             startActivity(kakaoMapsAppIntent)

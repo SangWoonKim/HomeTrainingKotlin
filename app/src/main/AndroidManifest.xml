@@ -17,7 +17,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HomeTrainingKotlin"
         android:usesCleartextTraffic="true">
-        <activity android:name=".view.kakao.KakaoDetailActivity"></activity>
+        <activity android:name=".view.ExerciseList.Active"></activity>
+        <activity android:name=".view.kakao.KakaoDetailActivity" />
         <activity android:name=".view.kakao.KakaoMapsMain" />
         <activity
             android:name=".view.Splash.initSplashView"
