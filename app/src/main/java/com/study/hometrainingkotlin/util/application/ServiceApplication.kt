@@ -10,6 +10,7 @@ class ServiceApplication: Application() {
 
 
     //singleton
+    //static패키지의 Log클래스들 다 명시해야함
     companion object{
         private var serviceApplicationInstance: ServiceApplication ?= null
 

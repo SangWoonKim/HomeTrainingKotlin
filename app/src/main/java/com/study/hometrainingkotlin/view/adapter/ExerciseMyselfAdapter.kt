@@ -1,15 +1,13 @@
 package com.study.hometrainingkotlin.view.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.study.hometrainingkotlin.BR
 import com.study.hometrainingkotlin.R
-import com.study.hometrainingkotlin.databinding.ExerciseItemBinding
 import com.study.hometrainingkotlin.databinding.ListviewMyselfBinding
-import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseMyselfEntity
+import com.study.hometrainingkotlin.model.localrepository.room.util.ExerciseMyselfEntity
 
 class ExerciseMyselfAdapter(exerciseMyselfArray: ArrayList<ExerciseMyselfEntity>) :
     RecyclerView.Adapter<ExerciseMyselfAdapter.ExerciseMyselfViewHolder>() {

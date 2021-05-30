@@ -10,7 +10,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.study.hometrainingkotlin.BottomNaviView
 import com.study.hometrainingkotlin.R
-import com.study.hometrainingkotlin.model.Login_Data
+import com.study.hometrainingkotlin.model.externalrepository.vo.Login_Data
 import com.study.hometrainingkotlin.model.externalrepository.utils.LoginInterface
 import com.study.hometrainingkotlin.model.externalrepository.utils.RetrofitClient
 import com.study.hometrainingkotlin.model.localrepository.room.DataBaseCopy

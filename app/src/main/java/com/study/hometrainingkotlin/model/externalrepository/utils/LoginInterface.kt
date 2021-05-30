@@ -1,6 +1,6 @@
 package com.study.hometrainingkotlin.model.externalrepository.utils
 
-import com.study.hometrainingkotlin.model.Login_Data
+import com.study.hometrainingkotlin.model.externalrepository.vo.Login_Data
 import retrofit2.Call
 import retrofit2.http.FieldMap
 import retrofit2.http.FormUrlEncoded

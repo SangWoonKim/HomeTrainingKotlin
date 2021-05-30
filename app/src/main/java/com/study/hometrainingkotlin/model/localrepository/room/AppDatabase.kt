@@ -8,8 +8,8 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.study.hometrainingkotlin.model.localrepository.room.dao.ExerciseDAO
 import com.study.hometrainingkotlin.model.localrepository.room.dao.ExerciseListEntity
-import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseMyselfEntity
-import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseSumCalEntity
+import com.study.hometrainingkotlin.model.localrepository.room.util.ExerciseMyselfEntity
+import com.study.hometrainingkotlin.model.localrepository.room.util.ExerciseSumCalEntity
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 

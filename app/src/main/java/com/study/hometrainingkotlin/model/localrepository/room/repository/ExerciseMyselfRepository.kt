@@ -4,8 +4,7 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import com.study.hometrainingkotlin.model.localrepository.room.AppDatabase
 import com.study.hometrainingkotlin.model.localrepository.room.dao.ExerciseDAO
-import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseMyselfEntity
-import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseSumCalEntity
+import com.study.hometrainingkotlin.model.localrepository.room.util.ExerciseMyselfEntity
 
 class ExerciseMyselfRepository(application: Application) {
     //room의 인스턴스 얻어와 저장

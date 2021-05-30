@@ -18,8 +18,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.study.hometrainingkotlin.R
 import com.study.hometrainingkotlin.model.localrepository.room.dao.ExerciseListEntity
-import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseMyselfEntity
-import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseSumCalEntity
+import com.study.hometrainingkotlin.model.localrepository.room.util.ExerciseMyselfEntity
+import com.study.hometrainingkotlin.model.localrepository.room.util.ExerciseSumCalEntity
 import com.study.hometrainingkotlin.view.ExerciseList.Active
 import com.study.hometrainingkotlin.view.ExerciseList.MyselfFight
 import com.study.hometrainingkotlin.view.adapter.ExerciseListAdapter

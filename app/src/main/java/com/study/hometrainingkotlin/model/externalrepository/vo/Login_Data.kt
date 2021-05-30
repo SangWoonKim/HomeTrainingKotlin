@@ -1,4 +1,4 @@
-package com.study.hometrainingkotlin.model
+package com.study.hometrainingkotlin.model.externalrepository.vo
 
 data class Login_Data(var id:String, var nickname:String) {
 //    var id:Int

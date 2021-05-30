@@ -12,8 +12,8 @@ import com.study.hometrainingkotlin.model.localrepository.room.dao.ExerciseListE
 import com.study.hometrainingkotlin.model.localrepository.room.repository.ExerciseListRepository
 import com.study.hometrainingkotlin.model.localrepository.room.repository.ExerciseMyselfRepository
 import com.study.hometrainingkotlin.model.localrepository.room.repository.ExerciseSumCalRepository
-import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseMyselfEntity
-import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseSumCalEntity
+import com.study.hometrainingkotlin.model.localrepository.room.util.ExerciseMyselfEntity
+import com.study.hometrainingkotlin.model.localrepository.room.util.ExerciseSumCalEntity
 
 //뷰모델 (굳이 쓸 필요가 없으나 이번기회에 사용해봄)
 //데이터를 조회하는 것 밖에 안하기 때문에 서버에서 값이 달라지지 않는 한 바뀌지 않음

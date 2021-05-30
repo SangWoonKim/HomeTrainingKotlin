@@ -1,14 +1,10 @@
 package com.study.hometrainingkotlin.model.localrepository.room.dao
 
-import android.database.Cursor
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 
-import androidx.sqlite.db.SupportSQLiteQuery
-import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseMyselfEntity
-import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseSumCalEntity
-import kotlinx.coroutines.flow.Flow
+import com.study.hometrainingkotlin.model.localrepository.room.util.ExerciseMyselfEntity
+import com.study.hometrainingkotlin.model.localrepository.room.util.ExerciseSumCalEntity
 
 //쿼리문 명세 클래스
 //실제로 db에 접근하는 용도

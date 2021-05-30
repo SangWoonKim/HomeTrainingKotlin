@@ -2,12 +2,9 @@ package com.study.hometrainingkotlin.model.localrepository.room.repository
 
 import android.app.Application
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.study.hometrainingkotlin.model.localrepository.room.AppDatabase
 import com.study.hometrainingkotlin.model.localrepository.room.dao.ExerciseDAO
 import com.study.hometrainingkotlin.model.localrepository.room.dao.ExerciseListEntity
-import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseMyselfEntity
-import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseSumCalEntity
 
 class ExerciseListRepository(application: Application) {
 

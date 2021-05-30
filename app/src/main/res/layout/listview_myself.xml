@@ -6,7 +6,7 @@
     <data>
         <variable
             name="exercisemyselfitem"
-            type="com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseMyselfEntity" />
+            type="com.study.hometrainingkotlin.model.localrepository.room.util.ExerciseMyselfEntity" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

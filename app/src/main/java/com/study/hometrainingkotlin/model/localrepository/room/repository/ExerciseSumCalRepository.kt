@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import com.study.hometrainingkotlin.model.localrepository.room.AppDatabase
 import com.study.hometrainingkotlin.model.localrepository.room.dao.ExerciseDAO
-import com.study.hometrainingkotlin.model.localrepository.room.vo.ExerciseSumCalEntity
+import com.study.hometrainingkotlin.model.localrepository.room.util.ExerciseSumCalEntity
 
 class ExerciseSumCalRepository(application: Application) {
     private val dbInstance = AppDatabase.getInstance(application)

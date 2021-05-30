@@ -15,7 +15,7 @@ class Active() : AppCompatActivity(),SpriteInterface, View.OnClickListener {
     override var spriteImageItem: ArrayList<String> ?= ArrayList()
     override var spriteImageItem2: ArrayList<String> ?= ArrayList()
     override var spriteHandler: Handler ?= createHandler()
-    override var imageView: ImageView? ?= null
+    override var imageView: ImageView ?= null
     override var activity: Activity = this
 
     private var BTN_Active_Start:Button ?= null
@@ -54,7 +54,6 @@ class Active() : AppCompatActivity(),SpriteInterface, View.OnClickListener {
         when(v!!.id){
             R.id.BTN_Active_Start ->{
                 threadStateChange()
-                //setText추가
                 BTN_Active_Start!!.text = "운동시작"
                 threadStart()
             }

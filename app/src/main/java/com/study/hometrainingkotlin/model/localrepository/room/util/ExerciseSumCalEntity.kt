@@ -1,4 +1,4 @@
-package com.study.hometrainingkotlin.model.localrepository.room.vo
+package com.study.hometrainingkotlin.model.localrepository.room.util
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

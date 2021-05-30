@@ -5,11 +5,48 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.study.hometrainingkotlin.R
 import java.util.*
 import kotlin.collections.ArrayList
+
+//운동실행에 필요한 기능이 명세되어있는 인터페이스
+
+//핸들러와 쓰레드의 역활을 분리하여 만들어야함 지금은 합친 상태
+//
+//interface Database{
+//    fun select()
+//    fun update()
+//}
+//
+///*
+//fun select(database: Database) {
+//    database.select()
+//}
+//
+// */
+//
+//// A
+//class Mysql():Database {
+//    override fun select() {
+//        TODO("Not yet implemented")
+//    }
+//
+//    override fun update() {
+//        TODO("Not yet implemented")
+//    }
+//}
+//
+//// B
+//class Oracel():Database {
+//    override fun select() {
+//        TODO("Not yet implemented")
+//    }
+//
+//    override fun update() {
+//        TODO("Not yet implemented")
+//    }
+//}
 
 interface SpriteInterface {
     //자바에서 인터페이스 상수를 사용시 상속되는 각 클래스는 공용 상수가 되어 다른 곳에서도 참조및 재정의가 가능의 문제점 생성
@@ -75,7 +112,9 @@ interface SpriteInterface {
     //Thread생성 및 실행과 메세지 제어 메소드
     fun threadStart(){
         spriteThread = Thread(){
+            //초기상태이거나 쉬는 시간 상태일 경우
             if (checkStatus == true){
+                //쉬는 시간일 경우
                 while (checkStatus){
                     try {
                         spriteHandler!!.sendMessage(spriteHandler!!.obtainMessage())
@@ -84,15 +123,17 @@ interface SpriteInterface {
                         t.printStackTrace()
                     }
                 }
+                //운동 애니메이션 실행 상태 일경우
             }else{
-
+                //2차원 배열의 열의 크기가 마지막과 같을 경우
                 if(record == spriteList.size-1){
-                    var finishMessage:Message = spriteHandler!!.obtainMessage()
+                    val finishMessage:Message = spriteHandler!!.obtainMessage()
                     finishMessage.what = 2
                     spriteHandler!!.sendMessage(finishMessage)
                 }else{
-                    var nextImageMessage:Message = spriteHandler!!.obtainMessage()
+                    val nextImageMessage:Message = spriteHandler!!.obtainMessage()
                     nextImageMessage.what = 1
+                    //
                     record++
                     spriteHandler!!.sendMessage(nextImageMessage)
                 }
@@ -114,7 +155,7 @@ interface SpriteInterface {
 
     //쓰레드 초기화 메소드
     fun closeInit(){
-        checkStatus = false;
+        checkStatus = false
         if (spriteThread == null){
             record =0
         }else{
@@ -132,23 +173,23 @@ interface SpriteInterface {
 
     //운동완료시 호출하는 메소드
     private fun activeComplete(){
-        var dialog:AlertDialog.Builder = AlertDialog.Builder(activity!!)
+        val dialog:AlertDialog.Builder = AlertDialog.Builder(activity)
         dialog.setMessage("운동이 끝났습니다")
             .setPositiveButton("확인"){
                     d,w ->
-                activity!!.onBackPressed()
+                activity.onBackPressed()
             }.create().show()
     }
 
     //Thread가 읽는 배열의 한 행 데이터를 나누기 연산을 이용하여 반복시키는 메소드
     private fun updateThread(){
-        var iteraionColumn:Int = index % 2
+        val iteraionColumn:Int = index % 2
 
-        var DBPath = spriteList.get(record).get(iteraionColumn)
-        var type ="drawable"
-        var packageName:String= activity!!.packageName
+        val DBPath = spriteList.get(record).get(iteraionColumn)
+        val type ="drawable"
+        val packageName:String= activity.packageName
 
-        var resId = activity!!.resources.getIdentifier(DBPath,type,packageName)
+        val resId = activity.resources.getIdentifier(DBPath,type,packageName)
 
        when(iteraionColumn){
 
